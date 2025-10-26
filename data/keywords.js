@@ -95,7 +95,7 @@ const DIMA_ENHANCED_KEYWORDS = {
     ],
   },
 
-  TE0501: {
+  TE0414: {
     core: [
       "ne ratez pas",
       "don't miss",
@@ -175,7 +175,7 @@ const CONTEXT_PATTERNS = {
       /(?:dépêchez-vous|ne\s+ratez\s+pas|hurry|don't\s+miss)/i,
     ],
     boost: 1.3,
-    techniques: ["TE0501", "TE0500"],
+    techniques: ["TE0501", "TE0414"],
   },
   authority: {
     patterns: [
