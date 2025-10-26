@@ -95,7 +95,7 @@ boosts = analyzeContext(text, techniqueId);
 // Pour chaque technique détectée
 rawScore = nombreOccurrences * multiplicateurVariante
 
-// Exemple : TE0500 (Clickbait)
+// Exemple : TE0153 (Clickbait)
 // - "vous ne croirez pas" (core) : +1.0
 // - "révélation choc" (clickbait_formula) : +1.6  
 // - Pattern "X choses que..." : +1.5
@@ -108,7 +108,7 @@ rawScore = nombreOccurrences * multiplicateurVariante
 // Adaptation selon le type de page
 switch(pageType) {
     case 'news':
-        if (TE0500) contextWeight = 1.4; // Clickbait plus grave
+        if (TE0153) contextWeight = 1.4; // Clickbait plus grave
         if (TE0132) contextWeight = 1.3; // Négativité suspecte
         break;
     case 'commerce':
@@ -157,7 +157,7 @@ const totalWeight = baseWeight * contextualWeight * dynamicWeight;
 const weightedScore = finalScore * totalWeight;
 
 // Exemple concret :
-// TE0500 sur site d'actualités avec 6 occurrences
+// TE0153 sur site d'actualités avec 6 occurrences
 // baseWeight = 1.5 (clickbait)
 // contextualWeight = 1.4 (site news)  
 // dynamicWeight = 1.2 (6 occurrences)
@@ -184,7 +184,7 @@ const globalScore = Math.min(Math.round(totalScore * 3), 100);
 
 ```javascript
 // Techniques détectées :
-TE0500 (Clickbait): 
+TE0153 (Clickbait): 
 - Score brut: 4.1
 - Poids: 1.5 × 1.4 × 1.2 = 2.52  
 - Score pondéré: 10.3
@@ -238,7 +238,7 @@ Score Final = Score Brut × Poids Base × Poids Contextuel × Poids Dynamique ×
 ```javascript
 TE0132: 1.4,  // Biais de négativité - Joue sur la peur
 TE0501: 1.4,  // FOMO - Manipulation pure
-TE0500: 1.5,  // Clickbait - Tromperie délibérée
+TE0153: 1.5,  // Clickbait - Tromperie délibérée
 TE0221: 1.6   // Stéréotypes - Impact social grave
 ```
 
@@ -268,7 +268,7 @@ TE0232: 0.9   // Route connue - Préférence naturelle
 | Technique | Poids | Justification |
 |-----------|-------|---------------|
 | **TE0221 (Stéréotypes)** | **1.6** | Impact social majeur, discrimination, propagation de préjugés |
-| **TE0500 (Clickbait)** | **1.5** | Manipulation pure pour générer des clics, tromperie délibérée |
+| **TE0153 (Clickbait)** | **1.5** | Manipulation pure pour générer des clics, tromperie délibérée |
 | **TE0132 (Négativité)** | **1.4** | Exploitation de la peur, impact émotionnel fort |
 | **TE0501 (FOMO)** | **1.4** | Création d'urgence artificielle, pression psychologique |
 | **TE0143 (Contraste)** | **0.8** | Technique normale de comparaison, usage légitime |
@@ -280,7 +280,7 @@ TE0232: 0.9   // Route connue - Préférence naturelle
 #### **Sites d'actualités (news)**
 ```javascript
 case 'news':
-    TE0500 → ×1.4  // Clickbait inacceptable dans l'info
+    TE0153 → ×1.4  // Clickbait inacceptable dans l'info
     TE0132 → ×1.3  // Négativité suspecte 
     TE0221 → ×1.5  // Stéréotypes graves
     TE0212 → ×1.3  // Preuves anecdotiques problématiques
@@ -319,7 +319,7 @@ case 'blog':
 ### **Exemple concret** 
 
 ```javascript
-// TE0500 (Clickbait) détecté
+// TE0153 (Clickbait) détecté
 // Site d'actualités vs Site commercial
 
 // Site d'actualités :
@@ -353,7 +353,7 @@ calculateDynamicWeight(technique, occurrences) {
 
 #### **Techniques critiques** 
 ```javascript
-const criticalTechniques = ['TE0221', 'TE0500', 'TE0132', 'TE0501'];
+const criticalTechniques = ['TE0221', 'TE0153', 'TE0132', 'TE0501'];
 
 // Bonus si ≥2 occurrences d'une technique critique
 if (isCritical && occurrences >= 2) {
