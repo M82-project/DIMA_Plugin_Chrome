@@ -74,7 +74,7 @@ Pour chaque technique, le système recherche :
 | `informal` | `1.1` | Variantes informelles (registre familier) |
 | `clickbait_formulas` | `1.6` | Formules clickbait typiques |
 | `emotional_hooks` | `1.4` | Accroches émotionnelles |
-| `curiosity_gaps` | `1.5` | Trous de curiosité |
+| `curiosity_gaps` | `1.5` | Appel à la curiosité |
 | `urgency` | `1.3` | Marqueurs d'urgence |
 | `scarcity` | `1.4` | Marqueurs de rareté |
 | `temporal` | `1.2` | Marqueurs temporels |
@@ -133,7 +133,7 @@ Adapté selon le type de page :
 **Page NEWS**
 | Technique | Code | Poids |
 |-----------|------|-------|
-| Désinformation | TE0500 | `1.4` |
+| Clickbait | TE0153 | `1.4` |
 | Appel à l'émotion | TE0132 | `1.3` |
 | Polarisation | TE0221 | `1.5` |
 | Titre sensationnaliste | TE0212 | `1.3` |
@@ -179,7 +179,7 @@ Basé sur le nombre d'occurrences :
 
 **Techniques critiques** (bonus ×1.1 dès 2 occurrences) :
 - TE0221 (Polarisation)
-- TE0500 (Désinformation)
+- TE0153 (Clickbait)
 - TE0132 (Appel à l'émotion)
 - TE0501 (Preuve sociale)
 
