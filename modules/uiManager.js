@@ -60,7 +60,7 @@ class UIManager {
                 position: fixed !important;
                 top: 20px !important;
                 right: 20px !important;
-                z-index: 999999 !important;
+                z-index: 999999999 !important;
                 background: linear-gradient(135deg, ${this.analysisResults.riskColor}, ${this.adjustColor(this.analysisResults.riskColor, -20)}) !important;
                 color: white !important;
                 padding: 12px 16px !important;
