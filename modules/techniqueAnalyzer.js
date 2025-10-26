@@ -402,7 +402,7 @@ class TechniqueAnalyzer {
 
     switch (pageType) {
       case "news":
-        if (technique.index === "TE0500") contextualWeight = 1.4;
+        if (technique.index === "TE0153") contextualWeight = 1.4;
         if (technique.index === "TE0132") contextualWeight = 1.3;
         if (technique.index === "TE0221") contextualWeight = 1.5;
         if (technique.index === "TE0212") contextualWeight = 1.3;
@@ -454,7 +454,7 @@ class TechniqueAnalyzer {
     }
 
     // Cas spéciaux : certaines techniques sont plus graves même avec peu d'occurrences
-    const criticalTechniques = ["TE0221", "TE0500", "TE0132", "TE0501"];
+    const criticalTechniques = ["TE0221", "TE0153", "TE0132", "TE0501"];
     if (criticalTechniques.includes(technique.index) && occurrences >= 2) {
       dynamicWeight *= 1.1;
     }
