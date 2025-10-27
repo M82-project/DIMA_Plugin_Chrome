@@ -7,7 +7,7 @@ Il s’inscrit dans une démarche de lutte contre la manipulation de l’informa
 Nous aider : https://www.helloasso.com/associations/m82-project/formulaires/1
 
 # Installer votre plugin
-1. télécharger le ficier ZIP du dernier release;
+1. télécharger le fichier ZIP du dernier release;
 2. décompresser le dossier sur votre bureau (ou un dossier de votre choix);
 3. Ouvrez votre navigateur (Chrome ou Edge);
 4. Accédez aux extensions (cliquez sur le trois points en haut à droite de la page);
