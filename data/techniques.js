@@ -1010,7 +1010,7 @@ const DIMA_TECHNIQUES = [
   },
   {
     index: "TE0423",
-    nom: "Preuve sociale artificielle",
+    nom: "Biais de la preuve sociale artificielle",
     phase: "Act",
     description: "Création d'une illusion de concensus",
     mots_cles: [
