@@ -6,6 +6,14 @@ Il s’inscrit dans une démarche de lutte contre la manipulation de l’informa
 
 Nous aider, [rejoignez-nous !](https://www.helloasso.com/associations/m82-project/formulaires/1)
 
+# Installer votre plugin
+1. télécharger le fichier ZIP du dernier release;
+2. décompresser le dossier sur votre bureau (ou un dossier de votre choix);
+3. Ouvrez votre navigateur (Chrome ou Edge);
+4. Accédez aux extensions (cliquez sur les trois points en haut à droite de la page);
+5.  Activez le mode développeur, puis cliquez sur "Charger l'extension non empaquetée";
+6.  Sélectionnez le dossier « DIMA_Plugin_Chrome » sur votre bureau (ou dans le dossier choisi à l'étape 2);
+7.  Votre extension est maintenant en place !
 
 # Comment ça fonctionne ?
 
