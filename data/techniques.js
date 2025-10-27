@@ -291,6 +291,33 @@ const DIMA_TECHNIQUES = [
     tactic: "TA0015",
   },
   {
+    index: "TE0151",
+    nom: "Biais de distinction",
+    phase: "Detect",
+    description: "Surévaluation des différences entre options",
+    mots_cles: [
+      "différence majeure", "major difference", "distinction", "contraste",
+      "contrast", "opposé", "opposite", "radicalement différent","cela n'a rien à voir avec",
+      "radically different"
+    ],
+    weight: 1.0,
+    type: "technique",
+    tactic: "TA0015",
+  },
+  {
+    index: "TE0152",
+    nom: "Loi de Weber-Fechner",
+    phase: "Detect",
+    description: "Perception relative des changements d'intensité",
+    mots_cles: [
+      "légèrement", "slightly", "un peu plus", "a bit more", "sensiblement",
+      "noticeably", "progressivement", "gradually"
+    ],
+    weight: 0.9,
+    type: "technique",
+    tactic: "TA0015",
+  },
+  {
     index: "TE0153",
     nom: "Clickbait",
     phase: "Detect",
@@ -712,6 +739,19 @@ const DIMA_TECHNIQUES = [
     type: "technique",
     tactic: "TA0031",
   },
+    {
+    index: "TE0315",
+    nom: "Effet de génération",
+    phase: "Mémoriser",
+    description: "Meilleure mémorisation de l'information auto-générée",
+    mots_cles: [
+      "pensez-y", "think about it", "imaginez", "imagine", "réfléchissez",
+      "consider", "demandez-vous", "ask yourself"
+    ],
+    weight: 1.0,
+    type: "technique",
+    tactic: "TA0031",
+  },
   {
     index: "TE0321",
     nom: "Biais de confirmation",
@@ -739,6 +779,19 @@ const DIMA_TECHNIQUES = [
     tactic: "TA0032",
   },
   {
+    index: "TE0322",
+    nom: "Effacement négatif",
+    phase: "Mémoriser",
+    description: "Atténuation des émotions négatives dans la mémoire",
+    mots_cles: [
+      "ce n'était pas si mal", "wasn't that bad", "avec le recul", "in hindsight",
+      "finalement", "eventually", "au final", "in the end","ce n'était rien","ce n'était pas si important"
+    ],
+    weight: 0.9,
+    type: "technique",
+    tactic: "TA0032",
+  },
+  {
     index: "TE0331",
     nom: "Effet de récence",
     phase: "Mémoriser",
@@ -757,6 +810,19 @@ const DIMA_TECHNIQUES = [
       "current",
     ],
     weight: 1.1,
+    type: "technique",
+    tactic: "TA0033",
+  },
+    {
+    index: "TE0332",
+    nom: "Effet de simple exposition",
+    phase: "Mémoriser",
+    description: "Préférence accrue par exposition répétée",
+    mots_cles: [
+      "familier", "familiar", "connu", "known", "habituel", "usual",
+      "fréquent", "frequent", "régulier", "regular"
+    ],
+    weight: 1.2,
     type: "technique",
     tactic: "TA0033",
   },
@@ -860,6 +926,46 @@ const DIMA_TECHNIQUES = [
     tactic: "TA0041",
   },
   {
+    index: "TE0412",
+    nom: "Effet Peltzman",
+    phase: "Act",
+    description: "Compensation du risque par comportement plus risqué",
+    mots_cles: [
+      "sécurisé", "secure", "protégé", "protected", "sans danger", "safe",
+      "risque compensé", "risk compensated"
+    ],
+    weight: 1.0,
+    type: "technique",
+    tactic: "TA0041",
+  },
+  {
+    index: "TE0413",
+    nom: "Supériorité illusoire",
+    phase: "Act",
+    description: "Conviction d'être meilleur que la moyenne",
+    mots_cles: [
+      "meilleur que", "better than", "supérieur à", "superior to",
+      "au-dessus de la moyenne", "above average", "exception", "exceptional"
+    ],
+    weight: 1.1,
+    type: "technique",
+    tactic: "TA0041",
+  },
+  {
+    index: "TE0414",
+    nom: "FOMO",
+    phase: "Act",
+    description: "Peur de rater une opportunité",
+    mots_cles: [
+      "ne ratez pas", "don't miss", "dernière chance", "last chance", "limité",
+      "limited", "exclusif", "exclusive", "hurry", "urgent", "maintenant ou jamais",
+      "now or never"
+    ],
+    weight: 1.4,
+    type: "technique",
+    tactic: "TA0041",
+  },
+  {
     index: "TE0421",
     nom: "Coûts irrécupérables",
     phase: "Act",
@@ -903,6 +1009,19 @@ const DIMA_TECHNIQUES = [
     tactic: "TA0041",
   },
   {
+    index: "TE0431",
+    nom: "Biais d'omission",
+    phase: "Act",
+    description: "Préférence pour l'inaction même si dommageable",
+    mots_cles: [
+      "ne rien faire", "do nothing", "laisser faire", "let it be", "inaction",
+      "passif", "passive", "abstention"
+    ],
+    weight: 1.0,
+    type: "technique",
+    tactic: "TA0043",
+  },
+  {
     index: "TE0432",
     nom: "Biais du statu quo",
     phase: "Act",
@@ -926,25 +1045,18 @@ const DIMA_TECHNIQUES = [
     tactic: "TA0043",
   },
   {
-    index: "TE0414",
-    nom: "FOMO",
+    index: "TE0433",
+    nom: "Saturation informationnelle",
     phase: "Act",
-    description: "Peur de rater une opportunité",
+    description: "Surcharge d'information paralysant la décision",
     mots_cles: [
-      "ne ratez pas",
-      "don't miss",
-      "dernière chance",
-      "last chance",
-      "limité",
-      "limited",
-      "exclusif",
-      "exclusive",
-      "hurry",
-      "urgent",
+      "trop d'information", "too much information", "submergé", "overwhelmed",
+      "surchargé", "overloaded", "complexe", "complex", "compliqué",
+      "complicated", "paralysie", "paralysis"
     ],
-    weight: 1.4,
+    weight: 1.2,
     type: "technique",
-    tactic: "TA0041",
+    tactic: "TA0043",
   },
 ];
 
