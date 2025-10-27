@@ -1009,6 +1009,20 @@ const DIMA_TECHNIQUES = [
     tactic: "TA0041",
   },
   {
+    index: "TE0423",
+    nom: "Preuve sociale artificielle",
+    phase: "Act",
+    description: "Création d'une illusion de concensus",
+    mots_cles: [
+      "millions de personnes", "millions of people", "tout le monde utilise",
+      "everyone uses", "le plus populaire", "most popular", "viral", "trending",
+      "tendance", "buzz"
+    ],
+    weight: 1.4,
+    type: "technique",
+    tactic: "TA0042",
+  },
+  {
     index: "TE0431",
     nom: "Biais d'omission",
     phase: "Act",
