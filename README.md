@@ -4,7 +4,7 @@ L’index DIMA est un outil de détection automatique des techniques cognitives 
 
 Il s’inscrit dans une démarche de lutte contre la manipulation de l’information et de promotion de l’esprit critique numérique et de la vigilance en ligne. Il constitue un outil d’aide, pas un verdict définitif sur la qualité d’un contenu.
 
-Nous aider : https://www.helloasso.com/associations/m82-project/formulaires/1
+Nous aider, [rejoignez nous !](https://www.helloasso.com/associations/m82-project/formulaires/1)
 
 
 # Comment ça fonctionne ?
