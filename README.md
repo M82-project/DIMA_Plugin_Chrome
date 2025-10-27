@@ -12,7 +12,7 @@ Nous aider : https://www.helloasso.com/associations/m82-project/formulaires/1
 3. Ouvrez votre navigateur (Chrome ou Edge);
 4. Accédez aux extensions (cliquez sur le trois points en haut à droite de la page);
 5.  Activez le mode développeur, puis cliquez sur "Charger l'extension non empaquetée";
-6.  Sélectionnez le dossier « DIMA_Plugin_Chrome » sur votre bureau (ou dans le dossier choisi à l'éatpe 2);
+6.  Sélectionnez le dossier « DIMA_Plugin_Chrome » sur votre bureau (ou dans le dossier choisi à l'étape 2);
 7.  Votre extension est maintenant en place !
 
 # Comment ça fonctionne ?
