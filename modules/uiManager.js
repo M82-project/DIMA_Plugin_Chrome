@@ -707,7 +707,7 @@ ${techniques.map(t => `• ${t.nom}`).join('\n')}`;
                                     style="background: #3498db; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 500; transition: background 0.3s;">
                                 Fermer
                             </button>
-                            <button onclick="window.open('https://diod.m82-project.org/', '_blank')" 
+                            <button onclick="window.open('https://m82-project.org/', '_blank')" 
                                     style="background: #95a5a6; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 500; transition: background 0.3s;">
                                 En savoir plus
                             </button>
