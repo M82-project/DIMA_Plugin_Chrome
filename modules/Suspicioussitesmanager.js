@@ -143,6 +143,18 @@ class SuspiciousSitesManager {
       });
       console.log(`  ✓ Source Doppelganger chargée: ${doppelgangerDomains.length} domaines`);
     }
+
+     // Source 9: InfoRos - noms de domaines 
+   if (typeof infoRosDomains !== 'undefined' && Array.isArray(infoRosDomains)) {
+      this.registerSource('InfoRos Domains', infoRosDomains, {
+        name:  'Réseau InfoRos',
+        description: 'Galaxie de sites web russophones identifiés dans l\'analyse "The GRU\'s Galaxy of Russian-speaking websites"',
+        organization: 'OpenFacto',
+        reportUrl: 'https://openfacto.fr/2022/01/27/the-grus-galaxy-of-russian-speaking-websites/',
+        reportDate: '2022-01-27'
+      });
+      console.log(`  ✓ Source InfoRos chargée: ${infoRosDomains.length} domaines`);
+    }
     
     // Avertissement si aucune source n'est chargée
     if (this.sources.size === 0) {
