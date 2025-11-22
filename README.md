@@ -21,7 +21,7 @@ Nous aider, [rejoignez-nous !](https://www.helloasso.com/associations/m82-projec
 
     Analyse le contenu dès le chargement de la page;
 
-    20 techniques DIMA : Couvre les 4 phases de traitement de l’info (Détecter, Informer, Mémoriser, Agir);
+    40 techniques DIMA : Couvre les 4 phases de traitement de l’info (Détecter, Informer, Mémoriser, Agir);
 
     Analyse par mots-clés : Système avancé avec variantes, patterns regex et analyse contextuelle (enfin presque…);
 
