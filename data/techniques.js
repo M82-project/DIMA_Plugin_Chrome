@@ -577,7 +577,7 @@ const DIMA_TECHNIQUES = [
     nom: "Biais de normalité",
     phase: "Inform",
     description: "Le biais de normalité est un biais cognitif qui conduit les individus à sous-estimer, minimiser voire nier la probabilité, la gravité ou la réalité d'un événement inhabituel, extrême ou catastrophique",
-    mots_cles: ["normal", "habituel", "comme d'habitude", "business as usual", "stable", "normal", "usual", "as usual", "business as usual", "stable"],
+    mots_cles: ["normal", "habituel", "comme d'habitude", "business as usual", "stable", "usual", "as usual"],
     weight: 1.2,
     type: "technique",
     tactic: "TA0024",
