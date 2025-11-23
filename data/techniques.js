@@ -129,7 +129,7 @@ const DIMA_TECHNIQUES = [
     tactic: "TA0011",
   },
   {
-    index: "TE0112",
+    index: "TE0332",
     nom: "Effet de simple exposition",
     phase: "Detect",
     description: "Répétition pour créer une familiarité artificielle",
@@ -633,6 +633,16 @@ const DIMA_TECHNIQUES = [
       tactic: "TA0022", // Généralisation et renforcement de stéréotypes
     },
   {
+    index: "TE0222",
+    nom: "Biais de confirmation",
+    phase: "Inform",
+    description: "Le biais de confirmation, également dénommé biais de confirmation d'hypothèse, est un mécanisme cognitif qui consiste à privilégier les informations confirmant ses idées préconçues ou ses hypothèses, ",
+    mots_cles: ["confirme", "validation", "comme prévu", "tel qu'attendu", "logique", "confirms", "as expected", "as predicted", "logical"],
+    weight: 1.4,
+    type: "technique",
+    tactic: "TA0022",
+  },
+  {
     index: "TE0231",
     nom: "Biais d'homogénéité",
     phase: "Informer",
@@ -663,27 +673,23 @@ const DIMA_TECHNIQUES = [
     type: "technique",
     tactic: "TA0023",
   },
-  {
+ {
     index: "TE0241",
-    nom: "Simplification excessive",
-    phase: "Informer",
-    description: "Réduction de problèmes complexes à des solutions simples",
-    mots_cles: [
-      "simple",
-      "évident",
-      "obvious",
-      "clair",
-      "clear",
-      "facile",
-      "easy",
-      "suffit de",
-      "just need to",
-      "solution",
-      "basique", "basic", "élémentaire", "elementary", "logique", "logical", "naturel", "natural",
-      "sans effort", "effortless", "automatique", "automatic", "c'est simple", "it's simple", 
-      "il suffit de", "la solution est simple", "the solution is simple"
-    ],
-    weight: 1.3,
+    nom: "Biais de la somme nulle",
+    phase: "Inform",
+    description: "Le biais de la somme nulle est un biais cognitif associé à la pensée à somme nulle ; c'est la tendance des gens à juger intuitivement qu'une situation est à somme nulle, même si ce n'est pas le cas. C",
+    mots_cles: ["gagnant-perdant", "somme nulle", "gain", "perte", "zéro", "winner-loser", "zero-sum", "gain", "loss", "zero"],
+    weight: 1.2,
+    type: "technique",
+    tactic: "TA0024",
+  },
+    {
+    index: "TE0242",
+    nom: "Biais de normalité",
+    phase: "Inform",
+    description: "Le biais de normalité est un biais cognitif qui conduit les individus à sous-estimer, minimiser voire nier la probabilité, la gravité ou la réalité d'un événement inhabituel, extrême ou catastrophique",
+    mots_cles: ["normal", "habituel", "comme d'habitude", "business as usual", "stable", "usual", "as usual"],
+    weight: 1.2,
     type: "technique",
     tactic: "TA0024",
   },
@@ -695,6 +701,7 @@ const DIMA_TECHNIQUES = [
     mots_cles: [
       "tout le monde",
       "consensus",
+      "chacun sait",
       "convergence",
       "everyone",
       "la plupart",
@@ -853,7 +860,7 @@ const DIMA_TECHNIQUES = [
     type: "technique",
     tactic: "TA0031",
   },
-  {
+ {
     index: "TE0321",
     nom: "Stéréotype implicite",
     phase: "Mémoriser",
@@ -971,6 +978,8 @@ const DIMA_TECHNIQUES = [
       "premier",
       "first",
       "initial",
+      "initialement",
+      "pour commencer",
       "début",
       "beginning",
       "origine",
@@ -1063,14 +1072,14 @@ const DIMA_TECHNIQUES = [
   },
   {
     index: "TE0412",
-    nom: "Effet Peltzman",
+    nom: "Effet Peltzman (compensation du risque)",
     phase: "Act",
     description: "Compensation du risque par comportement plus risqué",
     mots_cles: [
       "sécurisé", "secure", "protégé", "protected", "sans danger", "safe",
-      "risque compensé", "risk compensated"
+      "risque compensé", "risk compensated", "ça balance", "ça équilibre",
     ],
-    weight: 1.0,
+    weight: 1.2,
     type: "technique",
     tactic: "TA0041",
   },
