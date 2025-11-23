@@ -530,6 +530,7 @@ const DIMA_TECHNIQUES = [
     weight: 1.4,
     type: "technique",
     tactic: "TA0022",
+  },
   {
     index: "TE0231",
     nom: "Biais d'homogénéité",
