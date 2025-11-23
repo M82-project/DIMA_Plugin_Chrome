@@ -526,7 +526,7 @@ const DIMA_TECHNIQUES = [
     nom: "Biais de confirmation",
     phase: "Inform",
     description: "Le biais de confirmation, également dénommé biais de confirmation d'hypothèse, est un mécanisme cognitif qui consiste à privilégier les informations confirmant ses idées préconçues ou ses hypothèses, ",
-    mots_cles: ["confirme", "validation", "comme prévu", "tel qu'attendu", "logique", "confirms", "validation", "as expected", "as predicted", "logical"],
+    mots_cles: ["confirme", "validation", "comme prévu", "tel qu'attendu", "logique", "confirms", "as expected", "as predicted", "logical"],
     weight: 1.4,
     type: "technique",
     tactic: "TA0022",
