@@ -966,27 +966,65 @@ const DIMA_TECHNIQUES = [
     tactic: "TA0041",
   },
   {
-    index: "TE0421",
-    nom: "Coûts irrécupérables",
-    phase: "Act",
-    description: "Persistance dans une voie du fait d'investissements passés",
-    mots_cles: [
-      "continuer",
-      "continue",
-      "persister",
-      "persist",
-      "investir plus",
-      "invest more",
-      "ne pas abandonner",
-      "don't give up",
-      "persévérer", "persevere", "tenir bon", "hold on", "doubler la mise", "double down", 
-      "aller plus loin", "go further", "s'engager", "commit", "ne pas lâcher", "don't quit",
-      "continue à", "continue to", "keep going", "coûte que coûte", "quoi qu'il en coûte"
-    ],
-    weight: 1.1,
-    type: "technique",
-    tactic: "TA0042",
-  },
+  index: "TE0421",
+  nom: "Biais des coûts irrécupérables",
+  phase: "Act",
+  description: "Tendance à continuer une activité en raison des ressources déjà investies, même si l'abandon serait plus rationnel (Sunk cost fallacy)",
+  mots_cles: [
+    // Investissement passé
+    "déjà investi", "already invested", "already put in",
+    "temps passé", "time spent", "argent dépensé", "money spent",
+    "efforts fournis", "efforts made", "ressources engagées", "resources committed",
+    
+    // Expressions de continuation
+    "continuer", "continue", "persister", "persist", "persévérer", "persevere",
+    "ne pas abandonner", "don't give up", "don't quit", "tenir bon", "hold on",
+    "aller jusqu'au bout", "see it through", "aller au bout", "finish it",
+    
+    // Justifications basées sur le passé
+    "trop tard pour reculer", "too late to back out", "too late to give up",
+    "on a commencé", "we started", "we've begun", "on est lancé",
+    "après tout ce qu'on a fait", "after all we've done", "after all that",
+    "après tant d'efforts", "after so much effort",
+    "vu le temps passé", "given the time spent",
+    "vu l'argent dépensé", "given the money spent",
+    "maintenant qu'on a", "now that we have",
+    "puisqu'on a déjà", "since we already",
+    
+    // Point de non-retour
+    "point de non-retour", "point of no return",
+    "trop avancé pour arrêter", "too far to stop",
+    "on ne peut plus reculer", "can't turn back now",
+    "impossible de faire marche arrière", "can't go back",
+    "pas de retour en arrière", "no turning back",
+    
+    // Escalade d'engagement
+    "investir plus", "invest more", "doubler la mise", "double down",
+    "mettre encore plus", "put in even more",
+    "on est engagé", "we're committed", "engaged now",
+    "faut aller jusqu'au bout", "must see it through",
+    
+    // Aversion au gaspillage
+    "ce serait du gâchis", "it would be a waste", "tout perdre", "lose everything",
+    "gaspiller", "waste", "perdu pour rien", "all for nothing",
+    "en vain", "in vain", "pour rien", "for nothing",
+    "on ne va pas tout perdre", "won't lose everything",
+    
+    // Termes explicites
+    "coûts irrécupérables", "sunk cost", "sunk costs",
+    "investissement perdu", "lost investment",
+    "coûts déjà engagés", "costs already incurred",
+    
+    // Rationalisation
+    "faut rentabiliser", "need to make it pay", "rentabiliser",
+    "récupérer l'investissement", "recover the investment",
+    "faire fructifier", "make it pay off",
+    "coûte que coûte", "at all costs", "quoi qu'il en coûte", "whatever it takes"
+  ],
+  weight: 1.4,
+  type: "technique",
+  tactic: "TA0042",
+},
   {
     index: "TE0422",
     nom: "Biais d'autorité",
@@ -1006,7 +1044,7 @@ const DIMA_TECHNIQUES = [
     ],
     weight: 1.3,
     type: "technique",
-    tactic: "TA0041",
+    tactic: "TA0042",
   },
   {
     index: "TE0423",
@@ -1022,6 +1060,177 @@ const DIMA_TECHNIQUES = [
     type: "technique",
     tactic: "TA0042",
   },
+{
+    index: "TE0424",
+    nom: "Biais de rareté",
+    phase: "Act",
+    description: "Valorisation accrue d'une opportunité ou d'un objet perçu comme rare, limité ou difficile à obtenir (Scarcity bias)",
+    mots_cles: [
+      // Expressions directes de rareté
+      "rare", "rare", "rarissime", "very rare",
+      "limité", "limited", "restreint", "restricted",
+      "exclusif", "exclusive", "unique", "unique",
+      "exceptionnel", "exceptional",
+      
+      // Quantités limitées
+      "stock limité", "limited stock", "quantité limitée", "limited quantity",
+      "places limitées", "limited seats", "dernières pièces", "last pieces",
+      "derniers exemplaires", "last copies", "plus que", "only",
+      "seulement", "just", "il ne reste que", "only left",
+      
+      // Éditions spéciales
+      "édition limitée", "limited edition", "série limitée", "limited series",
+      "tirage limité", "limited run", "numéroté", "numbered",
+      "collection exclusive", "exclusive collection",
+      
+      // Disponibilité restreinte
+      "disponibilité limitée", "limited availability",
+      "disponibilité restreinte", "restricted availability",
+      "accès limité", "limited access", "réservé à", "reserved for",
+      "sur invitation", "by invitation only",
+      
+      // Temporalité de la rareté
+      "pour une durée limitée", "for a limited time",
+      "offre limitée dans le temps", "time-limited offer",
+      "tant que les stocks durent", "while supplies last",
+      "jusqu'à épuisement", "until sold out",
+      
+      // Expressions de pénurie
+      "presque épuisé", "almost sold out", "bientôt épuisé", "selling fast",
+      "rupture de stock imminente", "stock running out",
+      "en voie de disparition", "going away soon",
+      
+      // Exclusivité sociale
+      "réservé aux membres", "members only", "VIP uniquement", "VIP only",
+      "accès privilégié", "privileged access", "cercle privé", "private circle",
+      "liste restreinte", "restricted list",
+      
+      // Anglais spécifique
+      "scarce", "scarcity", "in short supply", "hard to find",
+      "limited time only", "while it lasts", "few remaining"
+    ],
+    weight: 1.3,
+    type: "technique",
+    tactic: "TA0042",
+  },
+  
+  {
+    index: "TE0425",
+    nom: "Pied dans la porte",
+    phase: "Act",
+    description: "Obtenir d'abord un petit engagement initial peu coûteux pour faciliter ensuite l'acceptation d'une demande plus importante (Foot-in-the-door technique, Freedman & Fraser, 1966)",
+    mots_cles: [
+      // Engagement initial
+      "commencez par", "start with", "commencer par", "begin with",
+      "premier pas", "first step", "premiers pas", "first steps",
+      "petit pas", "small step", "simple", "simple",
+      "facile", "easy", "rapide", "quick",
+      
+      // Sans engagement fort
+      "sans engagement", "no commitment", "sans obligation", "no obligation",
+      "aucun engagement", "no strings attached", "libre", "free",
+      "annulation gratuite", "free cancellation",
+      
+      // Essais et tests
+      "essayez", "try", "testez", "test", "découvrez", "discover",
+      "essai gratuit", "free trial", "période d'essai", "trial period",
+      "démo gratuite", "free demo", "test gratuit", "free test",
+      "juste essayer", "just try", "voir par vous-même", "see for yourself",
+      
+      // Inscription simple
+      "simple inscription", "simple signup", "inscription rapide", "quick registration",
+      "créez un compte", "create an account", "inscrivez-vous", "sign up",
+      "rejoignez-nous", "join us", "devenez membre", "become a member",
+      
+      // Progression graduée
+      "étape par étape", "step by step", "progressivement", "gradually",
+      "à votre rythme", "at your own pace", "petit à petit", "little by little",
+      "commencez maintenant", "start now", "démarrez aujourd'hui", "start today",
+      
+      // Investissement minimal
+      "quelques minutes", "few minutes", "juste un clic", "just one click",
+      "une seconde", "one second", "instantané", "instant",
+      "en quelques clics", "in a few clicks",
+      
+      // Premières actions simples
+      "consultez", "browse", "regardez", "look", "explorez", "explore",
+      "téléchargez gratuitement", "download free", "recevez gratuitement", "get free",
+      
+      // Réversibilité apparente
+      "vous pouvez annuler", "you can cancel", "résiliable", "cancellable",
+      "sans risque", "no risk", "satisfait ou remboursé", "money back guarantee",
+      
+      // Phrases types
+      "il suffit de", "just need to", "vous n'avez qu'à", "all you need to do",
+      "rien de plus simple", "nothing simpler", "c'est tout", "that's all"
+    ],
+    weight: 1.3,
+    type: "technique",
+    tactic: "TA0042",
+  },
+  
+  {
+    index: "TE0426",
+    nom: "Biais de réciprocité",
+    phase: "Act",
+    description: "Sentiment d'obligation de rendre une faveur, un cadeau ou un service reçu, même non sollicité (Principe de réciprocité, Cialdini)",
+    mots_cles: [
+      // Obligation de retour
+      "en retour", "in return", "en échange", "in exchange",
+      "rendre", "return", "rendre la pareille", "return the favor",
+      "vous devez", "you should", "il faut", "you must",
+      
+      // Faveurs et services
+      "rendre service", "return the favor", "rendre un service", "do a favor",
+      "faire quelque chose pour", "do something for",
+      "après tout ce qu'on a fait", "after all we've done",
+      "on vous a aidé", "we helped you", "nous vous avons aidé", "we've helped you",
+      
+      // Cadeaux et dons
+      "cadeau gratuit", "free gift", "offert", "offered",
+      "pour vous", "for you", "rien qu'à vous", "just for you",
+      "en cadeau", "as a gift", "bonus gratuit", "free bonus",
+      
+      // Dette sociale
+      "vous nous devez", "you owe us", "redevable", "indebted",
+      "dette", "debt", "obligation", "obligation",
+      "reconnaissant", "grateful", "reconnaissance", "gratitude",
+      
+      // Réciprocité explicite
+      "réciprocité", "reciprocity", "donnant-donnant", "give and take",
+      "échange de bons procédés", "mutual benefit",
+      "main lavant l'autre", "you scratch my back",
+      
+      // Culpabilisation
+      "après tout", "after all", "compte tenu de", "given that",
+      "vu que", "considering", "étant donné que", "given that",
+      "on a fait pour vous", "we did for you",
+      
+      // Générosité antérieure
+      "nous avons offert", "we offered", "on vous a donné", "we gave you",
+      "gracieusement", "free of charge", "gratuitement", "for free",
+      "sans rien demander", "without asking",
+      
+      // Attente de retour
+      "maintenant c'est à vous", "now it's your turn",
+      "à votre tour", "your turn", "faire de même", "do the same",
+      "montrez votre gratitude", "show your gratitude",
+      
+      // Phrases manipulatrices
+      "un geste en retour", "a gesture in return",
+      "la moindre des choses", "the least you can do",
+      "c'est normal de", "it's normal to",
+      "ce serait bien de", "it would be nice to",
+      
+      // Équilibre social
+      "équilibrer", "balance", "compenser", "compensate",
+      "s'acquitter", "settle", "honorer", "honor"
+    ],
+    weight: 1.4,
+    type: "technique",
+    tactic: "TA0042",
+  },
+
   {
     index: "TE0431",
     nom: "Biais d'omission",
