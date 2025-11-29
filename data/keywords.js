@@ -95,6 +95,328 @@ const DIMA_ENHANCED_KEYWORDS = {
     ],
   },
 
+  TE0151: {
+  core: [
+    "soit",
+    "either",
+    "ou bien",
+    "or else",
+    "seulement deux",
+    "only two",
+    "deux options",
+    "two options",
+    "deux choix",
+    "two choices"
+  ],
+  variants: {
+    binary_framing: [
+      "soit...soit",
+      "either...or",
+      "ou...ou",
+      "il n'y a que",
+      "there are only",
+      "seulement deux possibilités",
+      "only two possibilities",
+      "vous devez choisir entre",
+      "you must choose between"
+    ],
+    exclusionary: [
+      "avec nous ou contre nous",
+      "with us or against us",
+      "pour ou contre",
+      "for or against",
+      "ami ou ennemi",
+      "friend or foe",
+      "bon ou mauvais",
+      "good or bad"
+    ],
+    forced_choice: [
+      "il faut choisir",
+      "you must choose",
+      "pas d'autre option",
+      "no other option",
+      "pas d'alternative",
+      "no alternative",
+      "c'est l'un ou l'autre",
+      "it's one or the other"
+    ],
+    intensity: {
+      weak: [
+        "principalement deux",
+        "mainly two",
+        "essentiellement deux",
+        "essentially two"
+      ],
+      strong: [
+        "ABSOLUMENT deux",
+        "ABSOLUTELY two",
+        "UNIQUEMENT ces deux",
+        "ONLY these two",
+        "PAS D'AUTRE CHOIX",
+        "NO OTHER CHOICE"
+      ]
+    }
+  },
+  patterns: [
+    /(?:soit|either)\s+.+\s+(?:soit|or)\s+/i,
+    /(?:il\s+n'y\s+a\s+que|there\s+are\s+only)\s+(?:deux|2|two)\s+(?:options?|choix|choices?)/i,
+    /(?:avec|with)\s+(?:nous|us)\s+(?:ou|or)\s+(?:contre|against)\s+(?:nous|us)/i,
+    /(?:pour|for)\s+ou\s+(?:contre|against)/i,
+    /(?:pas|no)\s+(?:d'autre|other)\s+(?:option|choix|choice|alternative)/i,
+    /(?:vous|you)\s+(?:devez|must)\s+(?:choisir|choose)\s+(?:entre|between)/i
+  ]
+},
+
+  TE0212: {
+  core: [
+    "anecdote",
+    "exemple",
+    "example",
+    "témoignage",
+    "testimony",
+    "j'ai un ami",
+    "I have a friend",
+    "mon voisin",
+    "my neighbor",
+    "une connaissance",
+    "an acquaintance"
+  ],
+  variants: {
+    personal_stories: [
+      "j'ai un ami qui",
+      "I know someone who",
+      "ma cousine",
+      "my cousin",
+      "un collègue",
+      "a colleague",
+      "quelqu'un que je connais",
+      "someone I know",
+      "dans ma famille",
+      "in my family",
+      "mon oncle",
+      "my uncle"
+    ],
+    anecdotal_intro: [
+      "prenons l'exemple de",
+      "take the example of",
+      "regardez le cas de",
+      "look at the case of",
+      "considérez l'histoire de",
+      "consider the story of",
+      "voici l'histoire de",
+      "here's the story of"
+    ],
+    generalizing_phrases: [
+      "cela prouve que",
+      "this proves that",
+      "la preuve c'est que",
+      "the proof is that",
+      "comme le montre cet exemple",
+      "as this example shows",
+      "cet exemple illustre",
+      "this example illustrates",
+      "cette histoire démontre",
+      "this story demonstrates"
+    ],
+    intensity: {
+      weak: [
+        "un exemple parmi d'autres",
+        "one example among others",
+        "cela suggère",
+        "this suggests"
+      ],
+      strong: [
+        "la preuve absolue",
+        "absolute proof",
+        "démontre définitivement",
+        "definitively demonstrates",
+        "prouve sans conteste",
+        "proves beyond doubt"
+      ]
+    }
+  },
+  patterns: [
+    /(?:j'ai|I\s+have)\s+(?:un|une|a)\s+(?:ami|amie|collègue|voisin|cousin|friend|neighbor|colleague)/i,
+    /(?:prenons|regardez|considérez|take|look\s+at|consider)\s+(?:l'exemple|le\s+cas|the\s+example|the\s+case)\s+(?:de|of)/i,
+    /(?:cette|this)\s+(?:histoire|anecdote|story)\s+(?:prouve|démontre|montre|proves|demonstrates|shows)/i,
+    /(?:quelqu'un|someone)\s+(?:que\s+je\s+connais|I\s+know)/i,
+    /(?:dans|in)\s+(?:ma|my)\s+(?:famille|family)/i,
+    /(?:cela|this)\s+(?:prouve|démontre|illustre|proves|demonstrates|illustrates)\s+que/i
+  ]
+},
+
+  TE0321: {
+  core: [
+    "stéréotype",
+    "stereotype", 
+    "tous les",
+    "toutes les",
+    "every single",
+    "généralement",
+    "typically",
+    "les français",
+    "les américains",
+    "americans",
+    "foreigners",
+    "immigrants"
+  ],
+  variants: {
+    universal_generalizations: [
+      "sans exception",
+      "without exception",
+      "systématiquement",
+      "invariablement",
+      "à chaque fois",
+      "every time",
+      "c'est toujours comme ça",
+      "always the same",
+      "ils sont tous pareils",
+      "they're all the same"
+    ],
+    group_attributions: [
+      "c'est typique des",
+      "typical of",
+      "comme tous les",
+      "like all the",
+      "ils sont tous",
+      "they all are",
+      "en général les",
+      "generally the"
+    ],
+    discriminatory: [
+      "ce genre de personnes",
+      "these kind of people",
+      "cette catégorie",
+      "this category",
+      "ce type de gens",
+      "that type of people"
+    ],
+    intensity: {
+      weak: [
+        "souvent les",
+        "often the",
+        "parfois les",
+        "sometimes the"
+      ],
+      strong: [
+        "TOUS les",
+        "ALL the",
+        "absolument tous",
+        "absolutely all",
+        "sans aucune exception",
+        "without any exception"
+      ]
+    }
+  },
+  patterns: [
+    /(?:tous|toutes|all)\s+(?:les|the)\s+\w+\s+(?:sont|are|font|do)/i,
+    /(?:c'est|it's)\s+(?:typique|typical)\s+(?:des|of)\s+\w+/i,
+    /(?:comme|like)\s+(?:tous|all)\s+(?:les|the)\s+\w+/i,
+    /(?:ils|elles|they)\s+sont\s+(?:tous|toutes|all)\s+(?:pareils?|the\s+same)/i,
+    /(?:généralement|usually|typically)\s+(?:les|the)\s+\w+/i,
+    /(?:sans|without)\s+(?:exception|any\s+exception)/i
+  ]
+},
+
+  TE0251: {
+    core: ["tout le monde", "consensus", "everyone", "la plupart", "most people", "nous pensons", "we think"],
+    variants: {
+      universal_claims: [
+      "personne ne peut nier",
+      "nobody can deny", 
+      "c'est du bon sens",
+      "it's common sense",
+      "chacun sait que",
+      "everyone knows"
+      ],
+      majority_appeals: [
+      "la majorité pense",
+      "the majority thinks",
+      "l'opinion générale", 
+      "most agree"
+      ]
+    },
+    patterns: [
+      /(?:tout le monde|everyone)\s+(?:sait|knows?|dit|says?)/i,
+      /(?:la plupart|most)\s+(?:des gens|people)\s+(?:pensent|think)/i
+    ],
+  },
+
+  TE0222: {
+  core: [
+    "confirme",
+    "confirms",
+    "prouve",
+    "proves",
+    "démontre",
+    "demonstrates",
+    "comme prévu",
+    "as expected",
+    "j'avais raison",
+    "I was right",
+    "évident",
+    "obvious"
+  ],
+  variants: {
+    validation_phrases: [
+      "cela confirme que",
+      "this confirms that",
+      "la preuve c'est que",
+      "the proof is that",
+      "comme le montre",
+      "as shown by",
+      "exactement",
+      "exactly",
+      "forcément",
+      "inevitably"
+    ],
+    predictive_claims: [
+      "comme je le disais",
+      "as I said",
+      "je l'avais dit",
+      "I told you",
+      "comme prédit",
+      "as predicted",
+      "sans surprise",
+      "unsurprisingly"
+    ],
+    reinforcement: [
+      "encore une fois",
+      "once again",
+      "une fois de plus",
+      "one more time",
+      "toujours pareil",
+      "always the same",
+      "ça recommence",
+      "here we go again"
+    ],
+    intensity: {
+      weak: [
+        "cela suggère",
+        "suggests",
+        "semble confirmer",
+        "seems to confirm"
+      ],
+      strong: [
+        "PROUVE définitivement",
+        "PROVES definitively",
+        "confirme sans l'ombre d'un doute",
+        "confirms beyond doubt",
+        "la preuve irréfutable",
+        "irrefutable proof"
+      ]
+    }
+  },
+  patterns: [
+    /(?:cela|this)\s+(?:confirme|prouve|démontre|proves|confirms)\s+(?:que|that)/i,
+    /(?:comme|as)\s+(?:prévu|je\s+le?\s+disais|expected|I\s+said)/i,
+    /(?:j'avais|I\s+was)\s+(?:raison|right)/i,
+    /(?:la\s+preuve|the\s+proof)\s+(?:c'est\s+que|is\s+that)/i,
+    /(?:évidemment|obviously|forcément|inevitably)/i,
+    /(?:sans\s+surprise|unsurprisingly|comme\s+attendu|as\s+anticipated)/i
+  ]
+},
+  
   TE0414: {
     core: [
       "ne ratez pas",
@@ -128,29 +450,7 @@ const DIMA_ENHANCED_KEYWORDS = {
       /(?:expire|ends?)\s+(?:bientôt|soon|today|demain|tomorrow)/i,
     ],
   },
-  TE0251: {
-    core: ["tout le monde", "consensus", "everyone", "la plupart", "most people", "nous pensons", "we think"],
-    variants: {
-      universal_claims: [
-      "personne ne peut nier",
-      "nobody can deny", 
-      "c'est du bon sens",
-      "it's common sense",
-      "chacun sait que",
-      "everyone knows"
-      ],
-      majority_appeals: [
-      "la majorité pense",
-      "the majority thinks",
-      "l'opinion générale", 
-      "most agree"
-      ]
-    },
-    patterns: [
-      /(?:tout le monde|everyone)\s+(?:sait|knows?|dit|says?)/i,
-      /(?:la plupart|most)\s+(?:des gens|people)\s+(?:pensent|think)/i
-    ],
-  },
+  
 
   TE0422: {
     core: ["autorité", "authority", "expert", "spécialiste", "specialist", "professeur", "professor", "docteur", "doctor", "officiel"],
@@ -464,7 +764,47 @@ const CONTEXT_PATTERNS = {
     ],
     boost: 1.4,
     techniques: ["TE0426"],
-  }
+  },
+  stereotyping: {
+  patterns: [
+    /(?:tous|toutes|all)\s+(?:les|the)\s+\w+\s+(?:sont|are)/i,
+    /(?:typique|typical)\s+(?:des|of)/i,
+    /(?:généralement|usually|typically)\s+(?:les|the)/i,
+    /(?:sans|without)\s+exception/i
+  ],
+  boost: 1.5,
+  techniques: ["TE0321", "TE0231"]
+},
+  confirmation: {
+  patterns: [
+    /(?:confirme|prouve|démontre|proves|confirms)\s+(?:que|that)/i,
+    /(?:comme|as)\s+(?:prévu|je\s+le\s+disais|expected|I\s+said)/i,
+    /(?:j'avais|I\s+was)\s+raison/i,
+    /(?:encore|once)\s+une\s+fois/i
+  ],
+  boost: 1.4,
+  techniques: ["TE0222"]
+},
+  false_dichotomy: {
+  patterns: [
+    /(?:soit|either)\s+.+\s+(?:soit|or)/i,
+    /(?:deux|two|2)\s+(?:options?|choix|choices?)/i,
+    /(?:avec|for|with)\s+(?:nous|moi|us|me)\s+ou\s+(?:contre|against)/i,
+    /(?:pas|no)\s+(?:d'autre|other)\s+(?:choix|option|choice)/i
+  ],
+  boost: 1.6,
+  techniques: ["TE0151"]
+},
+  anecdotal_evidence: {
+  patterns: [
+    /(?:j'ai|I\s+have)\s+(?:un|une|a)\s+(?:ami|collègue|friend|colleague)/i,
+    /(?:prenons|regardez|take|look)\s+(?:l'exemple|the\s+example)/i,
+    /(?:cette|this)\s+(?:histoire|story)\s+(?:prouve|démontre|proves)/i,
+    /(?:quelqu'un|someone)\s+(?:que|I)\s+(?:je\s+connais|know)/i
+  ],
+  boost: 1.5,
+  techniques: ["TE0212", "TE0211"]
+},
 };
 
 // Make keywords and patterns available globally for Chrome extension
