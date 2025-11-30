@@ -18,6 +18,98 @@ const DIMA_ENHANCED_KEYWORDS = {
     ],
   },
 
+  TE0121: {
+  core: [
+    "partout", "everywhere", "de plus en plus", "more and more",
+    "fréquent", "frequent", "épidémie", "epidemic", "sans cesse",
+    "constantly", "en permanence", "all the time", "se répand",
+    "spreading", "prolifère", "multiplies", "tendance", "trend",
+    "phénomène", "phenomenon"
+  ],
+  variants: {
+    formal: [
+      "omniprésent", "omnipresent", "croissance exponentielle",
+      "exponential growth", "généralisé", "widespread", "systématique",
+      "systematic", "récurrent", "recurrent"
+    ],
+    informal: [
+      "on en parle partout", "everyone's talking about", "tous en parlent",
+      "sur toutes les lèvres", "on everyone's lips", "fait le buzz",
+      "going viral", "viral", "les réseaux s'enflamment"
+    ],
+    intensity: {
+      weak: [
+        "assez fréquent", "quite frequent", "se développe", "developing",
+        "en augmentation", "increasing"
+      ],
+      strong: [
+        "explosion", "exploding", "monté en flèche", "skyrocketing",
+        "déferlante", "surge", "invasion", "envahit", "invading",
+        "impossible d'y échapper", "can't escape"
+      ],
+    },
+  },
+  patterns: [
+    /(?:partout\s+(?:dans|sur)|everywhere\s+(?:in|on))/i,
+    /(?:de\s+plus\s+en\s+plus\s+(?:de|nombreux)|more\s+and\s+more)/i,
+    /(?:encore\s+un(?:e)?|another\s+one)/i,
+    /(?:énième|umpteenth)/i,
+    /(?:tous\s+les\s+jours|every\s+day)/i,
+    /(?:à\s+chaque\s+fois|every\s+time)/i,
+    /(?:nouveau\s+normal|new\s+normal)/i,
+    /(?:devenu\s+courant|become\s+common)/i,
+    /(?:sur\s+tous\s+les\s+écrans|on\s+every\s+screen)/i,
+    /(?:dans\s+tous\s+les\s+médias|in\s+all\s+media)/i,
+    /(?:croissance\s+exponentielle|exponential\s+growth)/i,
+    /(?:se\s+répand\s+comme|spreading\s+like)/i,
+  ],
+},
+
+  TE0122: {
+  core: [
+    "similaire", "similar", "same as", "cela rappelle", "reminds",
+    "déjà vu", "dans ce contexte", "in this context", "comme",
+    "like", "tel que", "such as", "à l'instar de"
+  ],
+  variants: {
+    formal: [
+      "analogie", "analogy", "parallèle", "parallel", "comparable",
+      "comparaison", "comparison", "contexte analogue", "similar context",
+      "par analogie", "by analogy", "corrélation", "correlation"
+    ],
+    informal: [
+      "ça fait penser à", "makes you think of", "on dirait",
+      "looks like", "pareil que", "même chose", "same thing",
+      "du déjà-vu", "seen this before", "ça me dit quelque chose"
+    ],
+    intensity: {
+      weak: [
+        "un peu comme", "kind of like", "ressemble à", "resembles",
+        "fait écho", "echoes", "évoque", "evokes"
+      ],
+      strong: [
+        "exactement comme", "exactly like", "identique à", "identical to",
+        "reproduit", "reproduces", "calqué sur", "copied from",
+        "même schéma", "same pattern", "on connaît la suite"
+      ],
+    },
+  },
+  patterns: [
+    /(?:dans\s+ce\s+contexte|in\s+this\s+context)/i,
+    /(?:cela\s+rappelle|this\s+reminds)/i,
+    /(?:déjà\s+vu|seen\s+(?:this|it)\s+before)/i,
+    /(?:similaire\s+à|similar\s+to)/i,
+    /(?:comme\s+(?:dans|avec|pour)|like\s+(?:in|with))/i,
+    /(?:à\s+l'instar\s+de|just\s+like)/i,
+    /(?:même\s+(?:chose|schéma|situation)|same\s+(?:thing|pattern|situation))/i,
+    /(?:parallèle\s+avec|parallel\s+with)/i,
+    /(?:fait\s+penser\s+à|makes\s+you\s+think\s+of)/i,
+    /(?:on\s+dirait|looks\s+like)/i,
+    /(?:reproduit\s+le\s+(?:schéma|modèle)|reproduces\s+the\s+pattern)/i,
+    /(?:calqué\s+sur|modeled\s+on)/i,
+  ],
+},
+  
   TE0153: {
     core: ["secret", "choquant", "incroyable", "shocking", "amazing"],
     variants: {
@@ -95,78 +187,362 @@ const DIMA_ENHANCED_KEYWORDS = {
     ],
   },
 
-  TE0151: {
+TE0141: {
   core: [
-    "soit",
-    "either",
-    "ou bien",
-    "or else",
-    "seulement deux",
-    "only two",
-    "deux options",
-    "two options",
-    "deux choix",
-    "two choices"
+    "unique", "exceptionnel", "exceptional", "différent", "different",
+    "se démarque", "stands out", "inhabituel", "unusual", "rare",
+    "remarquable", "remarkable", "distinct", "à part"
   ],
   variants: {
-    binary_framing: [
-      "soit...soit",
-      "either...or",
-      "ou...ou",
-      "il n'y a que",
-      "there are only",
-      "seulement deux possibilités",
-      "only two possibilities",
-      "vous devez choisir entre",
-      "you must choose between"
+    formal: [
+      "singulier", "singular", "distinctif", "distinctive", "atypique",
+      "atypical", "spécifique", "specific", "exclusif", "exclusive",
+      "sans précédent", "unprecedented", "inédit", "novel"
     ],
-    exclusionary: [
-      "avec nous ou contre nous",
-      "with us or against us",
-      "pour ou contre",
-      "for or against",
-      "ami ou ennemi",
-      "friend or foe",
-      "bon ou mauvais",
-      "good or bad"
-    ],
-    forced_choice: [
-      "il faut choisir",
-      "you must choose",
-      "pas d'autre option",
-      "no other option",
-      "pas d'alternative",
-      "no alternative",
-      "c'est l'un ou l'autre",
-      "it's one or the other"
+    informal: [
+      "pas comme les autres", "not like the others", "sort du lot",
+      "stands out from the crowd", "tape à l'œil", "eye-catching",
+      "crève les yeux", "catches the eye", "pas banal", "rien de commun"
     ],
     intensity: {
       weak: [
-        "principalement deux",
-        "mainly two",
-        "essentiellement deux",
-        "essentially two"
+        "particulier", "particular", "assez différent", "quite different",
+        "un peu spécial", "somewhat special", "original", "se distingue"
       ],
       strong: [
-        "ABSOLUMENT deux",
-        "ABSOLUTELY two",
-        "UNIQUEMENT ces deux",
-        "ONLY these two",
-        "PAS D'AUTRE CHOIX",
-        "NO OTHER CHOICE"
+        "totalement unique", "totally unique", "absolument exceptionnel",
+        "absolutely exceptional", "radicalement différent", "radically different",
+        "jamais vu", "never seen before", "incomparable", "one of a kind",
+        "hors norme", "extraordinary"
+      ],
+    },
+  },
+  patterns: [
+    /(?:se\s+démarque|stands?\s+out)/i,
+    /(?:unique\s+en\s+son\s+genre|one\s+of\s+a\s+kind)/i,
+    /(?:pas\s+comme\s+les\s+autres|not\s+like\s+the\s+others)/i,
+    /(?:sort\s+du\s+lot|stands?\s+out\s+from\s+the\s+crowd)/i,
+    /(?:jamais\s+vu|never\s+seen)/i,
+    /(?:sans\s+précédent|unprecedented)/i,
+    /(?:seul(?:e)?\s+(?:à|de)|only\s+one\s+(?:to|that))/i,
+    /(?:rien\s+de\s+comparable|nothing\s+comparable)/i,
+    /(?:(?:totalement|complètement)\s+(?:unique|différent)|(?:totally|completely)\s+(?:unique|different))/i,
+    /(?:hors\s+(?:norme|du\s+commun)|beyond\s+ordinary)/i,
+    /(?:tape\s+à\s+l'œil|eye-catching)/i,
+    /(?:crève\s+les\s+yeux|catches\s+the\s+eye)/i,
+  ],
+},
+
+  TE0142: {
+  core: [
+    "initialement", "initially", "au départ", "at first",
+    "à l'origine", "originally", "première", "first", "d'abord",
+    "partir de", "starting from", "base", "baseline", "référence",
+    "reference", "annoncé", "announced"
+  ],
+  variants: {
+    formal: [
+      "prix initial", "initial price", "valeur de référence",
+      "reference value", "point de départ", "starting point",
+      "estimation initiale", "initial estimate", "tarif de base",
+      "base rate", "valeur d'origine", "original value",
+      "montant annoncé", "announced amount", "chiffre avancé",
+      "figure put forward"
+    ],
+    informal: [
+      "avant c'était", "it used to be", "normalement à", "normally at",
+      "prix barré", "crossed-out price", "au lieu de", "instead of",
+      "habituellement", "usually", "en temps normal", "typically"
+    ],
+    journalistic: [
+      "selon les premières estimations", "according to initial estimates",
+      "les experts tablaient sur", "experts were banking on",
+      "initialement prévu à", "initially planned at",
+      "dans un premier temps", "in the first instance",
+      "les premières projections", "initial projections",
+      "annoncé en grande pompe", "announced with great fanfare",
+      "le chiffre initialement avancé", "the figure initially put forward",
+      "les prévisions initiales", "initial forecasts",
+      "selon les premières déclarations", "according to initial statements",
+      "évoqué lors de l'annonce", "mentioned at the announcement",
+      "tel que présenté", "as presented", "présenté comme",
+      "lors du lancement", "at launch", "au moment de l'annonce"
+    ],
+    intensity: {
+      weak: [
+        "environ", "approximately", "autour de", "around",
+        "proche de", "close to", "près de", "near", "dans les",
+        "on parlait de", "we were talking about"
+      ],
+      strong: [
+        "valait", "was worth", "coûtait", "cost", "fixé à", "set at",
+        "évalué à", "valued at", "estimé à", "estimated at",
+        "chiffré à", "priced at", "annoncé à", "announced at",
+        "établi à", "established at", "affiché à", "displayed at",
+        "officiellement", "officially"
+      ],
+    },
+  },
+  patterns: [
+    /(?:prix\s+(?:initial|d'origine|de\s+départ)|(?:initial|original|starting)\s+price)/i,
+    /(?:au\s+lieu\s+de|instead\s+of)/i,
+    /(?:avant\s+(?:c'était|:)|(?:used\s+to\s+be|was))\s*[\d,\.]+/i,
+    /(?:normalement\s+à|normally\s+at)\s*[\d,\.]+/i,
+    /(?:valeur\s+(?:de\s+référence|d'origine)|(?:reference|original)\s+value)/i,
+    /(?:à\s+partir\s+de|starting\s+(?:from|at))\s*[\d,\.]+/i,
+    /(?:estimé\s+à|valued\s+at)\s*[\d,\.]+/i,
+    /(?:prix\s+barré|crossed(?:-|\s)out\s+price)/i,
+    /(?:base\s+de|baseline\s+of)\s*[\d,\.]+/i,
+    /(?:point\s+de\s+(?:départ|référence)|(?:starting|reference)\s+point)/i,
+    /(?:initialement\s+(?:à|de|prévu)|initially\s+(?:at|of|planned))\s*[\d,\.]*/i,
+    /(?:en\s+temps\s+normal|under\s+normal\s+circumstances)/i,
+    /(?:selon\s+les\s+premières\s+(?:estimations|projections|prévisions)|according\s+to\s+initial\s+(?:estimates|projections|forecasts))/i,
+    /(?:les\s+experts\s+tablaient\s+sur|experts\s+were\s+banking\s+on)/i,
+    /(?:dans\s+un\s+premier\s+temps|in\s+the\s+first\s+instance)/i,
+    /(?:annoncé\s+(?:en\s+grande\s+pompe|à)|announced\s+(?:with\s+great\s+fanfare|at))/i,
+    /(?:chiffre\s+(?:initialement\s+)?avancé|figure\s+(?:initially\s+)?put\s+forward)/i,
+    /(?:lors\s+(?:du\s+lancement|de\s+l'annonce)|at\s+(?:launch|the\s+announcement))/i,
+    /(?:tel\s+que\s+présenté|as\s+presented)/i,
+  ],
+},
+  
+TE0143: {
+  core: [
+    "comparé à", "compared to", "par rapport à", "in comparison",
+    "contrairement à", "unlike", "alors que", "whereas",
+    "en revanche", "however", "tandis que", "while",
+    "plutôt que", "rather than", "versus", "vs"
+  ],
+  variants: {
+    formal: [
+      "en comparaison de", "in comparison with", "par contraste avec",
+      "in contrast to", "à la différence de", "unlike",
+      "en opposition à", "as opposed to", "confronté à",
+      "juxtaposé à", "juxtaposed with", "mis en regard de"
+    ],
+    informal: [
+      "à côté de ça", "next to that", "face à", "faced with",
+      "quand on voit", "when you see", "si on compare",
+      "if you compare", "c'est rien comparé à", "nothing compared to",
+      "pas grand-chose à côté de", "not much next to"
+    ],
+    journalistic: [
+      "loin des", "far from", "bien en-deçà de", "well below",
+      "dépassant largement", "far exceeding", "nettement supérieur à",
+      "significantly higher than", "très inférieur à", "much lower than",
+      "sans commune mesure avec", "in no way comparable to",
+      "éclipsé par", "eclipsed by", "pâlit face à", "pales in comparison",
+      "fait pâle figure face à", "cuts a poor figure compared to",
+      "fait figure de", "appears as", "tranche avec", "contrasts sharply with",
+      "à mille lieues de", "worlds apart from"
+    ],
+    intensity: {
+      weak: [
+        "légèrement différent de", "slightly different from",
+        "un peu moins que", "a bit less than", "sensiblement",
+        "somewhat", "relativement à", "relative to"
+      ],
+      strong: [
+        "radicalement différent de", "radically different from",
+        "totalement opposé à", "completely opposite to",
+        "incomparable avec", "incomparable to", "abyssal",
+        "rien à voir avec", "nothing to do with",
+        "monde à part", "world apart", "jour et nuit", "night and day"
+      ],
+    },
+  },
+  patterns: [
+    /(?:comparé\s+(?:à|au|aux)|compared\s+to)/i,
+    /(?:par\s+rapport\s+(?:à|au|aux)|in\s+comparison\s+(?:to|with))/i,
+    /(?:contrairement\s+(?:à|au|aux)|unlike)/i,
+    /(?:alors\s+que|whereas|while)/i,
+    /(?:en\s+revanche|however|on\s+the\s+other\s+hand)/i,
+    /(?:plutôt\s+que|rather\s+than)/i,
+    /(?:versus|vs\.?|par\s+contraste)/i,
+    /(?:à\s+la\s+différence\s+de|unlike)/i,
+    /(?:en\s+opposition\s+à|as\s+opposed\s+to)/i,
+    /(?:loin\s+des|far\s+from)/i,
+    /(?:bien\s+(?:en-deçà|au-delà)\s+de|(?:well\s+below|far\s+beyond))/i,
+    /(?:dépassant\s+largement|far\s+exceeding)/i,
+    /(?:nettement\s+(?:supérieur|inférieur)|(?:significantly|much)\s+(?:higher|lower))/i,
+    /(?:sans\s+commune\s+mesure|in\s+no\s+way\s+comparable)/i,
+    /(?:éclipsé\s+par|eclipsed\s+by)/i,
+    /(?:pâlit\s+(?:face\s+à|devant)|pales\s+in\s+comparison)/i,
+    /(?:fait\s+pâle\s+figure|cuts\s+a\s+poor\s+figure)/i,
+    /(?:tranche\s+avec|contrasts\s+sharply)/i,
+    /(?:à\s+mille\s+lieues|worlds?\s+apart)/i,
+    /(?:rien\s+à\s+voir|nothing\s+to\s+do\s+with)/i,
+    /(?:jour\s+et\s+nuit|night\s+and\s+day)/i,
+  ],
+},
+  
+TE0151: {
+  core: [
+    "comparaison", "comparison", "comparez", "compare",
+    "face à face", "side by side", "différence", "difference",
+    "option A vs option B", "versus", "vs", "choix entre",
+    "choice between"
+  ],
+  variants: {
+    formal: [
+      "tableau comparatif", "comparison table", "analyse comparative",
+      "comparative analysis", "mise en parallèle", "juxtaposition",
+      "confrontation des options", "option comparison",
+      "évaluation comparative", "comparative evaluation"
+    ],
+    informal: [
+      "lequel choisir", "which one to choose", "mettons-les côte à côte",
+      "let's put them side by side", "regardez la différence",
+      "look at the difference", "vous hésitez entre",
+      "hesitating between", "face-à-face", "head-to-head"
+    ],
+    commercial: [
+      "comparez nos offres", "compare our offers",
+      "nos deux formules", "our two plans", "basique vs premium",
+      "basic vs premium", "standard ou avancé", "standard or advanced",
+      "pack A ou pack B", "package A or B", "quelle formule choisir",
+      "which plan to choose", "voir les différences", "see the differences",
+      "tableau des options", "options table"
+    ],
+    journalistic: [
+      "les deux candidats face à face", "two candidates head-to-head",
+      "analyse comparative", "comparative analysis",
+      "points de divergence", "points of divergence",
+      "où se situent les différences", "where the differences lie",
+      "décryptage des options", "decoding the options",
+      "forces et faiblesses comparées", "compared strengths and weaknesses"
+    ],
+    emphasis_differences: [
+      "contrairement à", "unlike", "alors que", "whereas",
+      "là où X offre", "where X offers", "X propose tandis que Y",
+      "X offers while Y", "différence notable", "notable difference",
+      "écart significatif", "significant gap", "distinction majeure",
+      "major distinction", "ce qui les sépare", "what separates them"
+    ],
+    intensity: {
+      weak: [
+        "quelques différences", "some differences",
+        "légèrement différent", "slightly different",
+        "nuances entre", "nuances between"
+      ],
+      strong: [
+        "différences majeures", "major differences",
+        "radicalement différent", "radically different",
+        "opposés sur tous les points", "opposite on all points",
+        "rien de comparable", "nothing comparable",
+        "monde de différence", "world of difference"
       ]
     }
   },
   patterns: [
-    /(?:soit|either)\s+.+\s+(?:soit|or)\s+/i,
-    /(?:il\s+n'y\s+a\s+que|there\s+are\s+only)\s+(?:deux|2|two)\s+(?:options?|choix|choices?)/i,
-    /(?:avec|with)\s+(?:nous|us)\s+(?:ou|or)\s+(?:contre|against)\s+(?:nous|us)/i,
-    /(?:pour|for)\s+ou\s+(?:contre|against)/i,
-    /(?:pas|no)\s+(?:d'autre|other)\s+(?:option|choix|choice|alternative)/i,
-    /(?:vous|you)\s+(?:devez|must)\s+(?:choisir|choose)\s+(?:entre|between)/i
-  ]
+    /(?:comparez|compare)\s+(?:les|nos|our)?\s*(?:deux|2|two)?\s*(?:options?|offres?|formules?|plans?)/i,
+    /(?:face\s+à\s+face|side\s+by\s+side|côte\s+à\s+côte)/i,
+    /(?:versus|vs\.?|contre)/i,
+    /(?:option|formule|pack|plan)\s+[A-Z]\s+(?:vs|ou|or)\s+(?:option|formule|pack|plan)\s+[A-Z]/i,
+    /(?:tableau|table)\s+(?:comparatif|des\s+options|comparison)/i,
+    /(?:différence|difference)\s+(?:entre|between|notable|majeure|significative)/i,
+    /(?:lequel|laquelle|which\s+one)\s+(?:choisir|to\s+choose)/i,
+    /(?:vous\s+hésitez\s+entre|hesitating\s+between)/i,
+    /(?:contrairement\s+à|unlike)\s+.+\s+(?:propose|offre|offers?)/i,
+    /(?:alors\s+que|whereas|while)\s+.+\s+(?:propose|offre|offers?)/i,
+    /(?:là\s+où|where)\s+\w+\s+(?:offre|propose|offers?)/i,
+    /(?:écart|gap)\s+(?:significatif|notable|important|significant)/i,
+    /(?:ce\s+qui\s+les\s+(?:sépare|distingue)|what\s+(?:separates|distinguishes)\s+them)/i,
+    /(?:basique|basic|standard)\s+(?:vs|ou|or)\s+(?:premium|avancé|advanced)/i,
+  ],
 },
-
+TE0152: {
+  core: [
+    "progressivement", "gradually", "petit à petit", "little by little",
+    "étape par étape", "step by step", "incrémentiel", "incremental",
+    "hausse progressive", "gradual increase", "ajustement",
+    "adjustment", "légère augmentation", "slight increase"
+  ],
+  variants: {
+    formal: [
+      "progression graduelle", "gradual progression",
+      "augmentation séquentielle", "sequential increase",
+      "modification incrémentale", "incremental modification",
+      "ajustement progressif", "progressive adjustment",
+      "évolution par paliers", "step-wise evolution",
+      "croissance contrôlée", "controlled growth"
+    ],
+    informal: [
+      "doucement mais sûrement", "slowly but surely",
+      "pas à pas", "step by step", "au fur et à mesure",
+      "as we go along", "tranquillement", "quietly",
+      "sans qu'on s'en rende compte", "without noticing"
+    ],
+    normalization: [
+      "devient la norme", "becomes the norm",
+      "nouvelle normalité", "new normal", "on s'y habitue",
+      "we get used to it", "habituation", "accoutumance",
+      "désensibilisation", "desensitization",
+      "acceptation progressive", "gradual acceptance",
+      "normalisation", "normalization"
+    ],
+    drowning_fish: [
+      "noyer le poisson", "muddy the waters",
+      "saturation d'information", "information saturation",
+      "surexposition", "overexposure", "bombardement",
+      "bombardment", "submergé par", "overwhelmed by",
+      "inondé de", "flooded with", "trop d'information",
+      "information overload", "dilué dans", "diluted in"
+    ],
+    journalistic: [
+      "glissement progressif", "gradual shift",
+      "dérive insensible", "imperceptible drift",
+      "évolution en douceur", "smooth evolution",
+      "changement par petites touches", "change by small increments",
+      "transformation silencieuse", "silent transformation",
+      "mutation progressive", "progressive mutation",
+      "érosion graduelle", "gradual erosion"
+    ],
+    pricing: [
+      "petite hausse de", "small increase in",
+      "léger ajustement tarifaire", "slight price adjustment",
+      "révision progressive", "gradual revision",
+      "augmentation modérée", "moderate increase",
+      "hausse contenue", "contained increase",
+      "adaptation au marché", "market adjustment",
+      "quelques centimes", "a few cents", "seulement",
+      "only", "juste", "just"
+    ],
+    intensity: {
+      weak: [
+        "minime", "minimal", "imperceptible", "barely noticeable",
+        "presque invisible", "almost invisible",
+        "à peine perceptible", "barely perceptible"
+      ],
+      strong: [
+        "série d'augmentations", "series of increases",
+        "hausses successives", "successive increases",
+        "accumulation", "accumulation", "effet cumulatif",
+        "cumulative effect", "spirale", "spiral"
+      ]
+    }
+  },
+  patterns: [
+    /(?:progressivement|gradually|petit\s+à\s+petit|little\s+by\s+little)/i,
+    /(?:étape\s+par\s+étape|step\s+by\s+step)/i,
+    /(?:léger(?:e)?\s+(?:hausse|augmentation|ajustement)|slight\s+(?:increase|adjustment))/i,
+    /(?:seulement|only|juste|just)\s+(?:quelques|a\s+few)\s+(?:%|pour\s*cent|percent|centimes|cents|euros?)/i,
+    /(?:nouvelle\s+normalité|new\s+normal)/i,
+    /(?:on\s+s'y\s+habitue|we\s+get\s+used\s+to\s+it)/i,
+    /(?:sans\s+qu'on\s+s'en\s+rende\s+compte|without\s+noticing)/i,
+    /(?:noyer\s+le\s+poisson|muddy\s+the\s+waters)/i,
+    /(?:saturation|surexposition|bombardement|overload)/i,
+    /(?:glissement|dérive|drift)\s+(?:progressif|insensible|imperceptible)/i,
+    /(?:transformation\s+silencieuse|silent\s+transformation)/i,
+    /(?:érosion\s+graduelle|gradual\s+erosion)/i,
+    /(?:hausses?\s+successives?|successive\s+increases?)/i,
+    /(?:effet\s+cumulatif|cumulative\s+effect)/i,
+    /(?:par\s+paliers|step-wise)/i,
+    /(?:devient\s+la\s+norme|becomes\s+the\s+norm)/i,
+  ],
+},
+  
+  
   TE0212: {
   core: [
     "anecdote",
