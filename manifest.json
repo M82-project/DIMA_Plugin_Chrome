@@ -25,6 +25,7 @@
         "data/techniques.js",
         "data/databases/Doppelganger.js",
         "data/databases/InfoRos.js",
+        "data/databases/laundromat.js",
         "data/keywords.js",
         "modules/contentExtractor.js",
         "modules/Suspicioussitesmanager.js",
