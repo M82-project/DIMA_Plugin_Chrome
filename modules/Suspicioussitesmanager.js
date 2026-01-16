@@ -156,6 +156,18 @@ class SuspiciousSitesManager {
       console.log(`  ✓ Source InfoRos chargée: ${infoRosDomains.length} domaines`);
     }
     
+     // Source 10: Laundromat - noms de domaines 
+   if (typeof infoRosDomains !== 'undefined' && Array.isArray(laundromatDomains)) {
+      this.registerSource('laundromat Domains', laundromatDomains, {
+        name:  'Réseau Laundromat',
+        description: 'Réseau de "blanchiment d\'information" où le contenu de RT.com est republié sur environ 400 domaines tiers pour contourner les sanctions et restrictions.',
+        organization: 'GMF, Alliance for securing democracy',
+        reportUrl: 'https://securingdemocracy.gmfus.org/wp-content/uploads/2024/05/Laundromat-Paper.pdf',
+        reportDate: '2024-05-01'
+      });
+      console.log(`  ✓ Source laundromat chargée: ${laundromatDomains.length} domaines`);
+    }
+    
     // Avertissement si aucune source n'est chargée
     if (this.sources.size === 0) {
       console.warn('⚠️  DIMA: Aucune base de données de sites suspects n\'a été chargée');
