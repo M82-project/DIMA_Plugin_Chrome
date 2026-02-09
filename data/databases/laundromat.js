@@ -48,16 +48,6 @@ const laundromatDomains = [
   
   // Réseaux sociaux contournant les restrictions
   {
-    domain: "reddit.com",
-    matchType: "contains",
-    reason: "4e domaine le plus observé malgré l'interdiction de RT. Utilise swentr.site et autres proxies pour contourner les restrictions",
-    source: "GMF Alliance for Securing Democracy",
-    reportUrl: "https://securingdemocracy.gmfus.org/wp-content/uploads/2024/05/Laundromat-Paper.pdf",
-    identifiedDate: "2024-05-02",
-    riskLevel: "high",
-    tags: ["Laundromat", "Russie", "Réseaux-Sociaux", "Contournement", "Reddit"]
-  },
-  {
     domain: "m.youtube.com",
     matchType: "contains",
     reason: "Articles RT narrés via text-to-speech automatisé pour contourner l'interdiction de chaînes RT",
@@ -408,8 +398,8 @@ const laundromatDomains = [
     tags: ["Laundromat", "Russie", "Antisémitisme", "Négationnisme", "Haine"]
   },
   {
-    domain: "gab.com",
-    matchType: "contains",
+    domain: "(^|\\.)gab\\.com$",
+    matchType: "pattern",
     reason: "Plateforme alternative hébergeant comptes nationalistes blancs partageant contenu RT",
     source: "GMF Alliance for Securing Democracy",
     reportUrl: "https://securingdemocracy.gmfus.org/wp-content/uploads/2024/05/Laundromat-Paper.pdf",
@@ -418,8 +408,8 @@ const laundromatDomains = [
     tags: ["Laundromat", "Russie", "Gab", "Extrême-Droite"]
   },
   {
-    domain: "8kun.top",
-    matchType: "contains",
+    domain: "(^|\\.)8kun\\.top$",
+    matchType: "pattern",
     reason: "Forum imageboard republiant contenu RT",
     source: "GMF Alliance for Securing Democracy",
     reportUrl: "https://securingdemocracy.gmfus.org/wp-content/uploads/2024/05/Laundromat-Paper.pdf",
