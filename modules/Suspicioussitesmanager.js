@@ -157,7 +157,7 @@ class SuspiciousSitesManager {
     }
     
      // Source 10: Laundromat - noms de domaines 
-   if (typeof infoRosDomains !== 'undefined' && Array.isArray(laundromatDomains)) {
+   if (typeof laundromatDomains !== 'undefined' && Array.isArray(laundromatDomains)) {
       this.registerSource('laundromat Domains', laundromatDomains, {
         name:  'Réseau Laundromat',
         description: 'Réseau de "blanchiment d\'information" où le contenu de RT.com est republié sur environ 400 domaines tiers pour contourner les sanctions et restrictions.',
