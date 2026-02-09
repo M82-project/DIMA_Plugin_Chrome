@@ -160,7 +160,7 @@ class SuspiciousSitesManager {
    if (typeof laundromatDomains !== 'undefined' && Array.isArray(laundromatDomains)) {
       this.registerSource('Laundromat Domains', laundromatDomains, {
         name:  'Réseau Laundromat',
-        description: 'Réseau de "blanchiment d\'information" où le contenu de RT.com est republié sur environ 400 domaines tiers pour contourner les sanctions et restrictions.',
+        description: 'Échantillon du réseau de "blanchiment d\'information" Laundromat, où le contenu de RT.com est republié sur environ 400 domaines tiers pour contourner les sanctions et restrictions.',
         organization: 'GMF, Alliance for Securing Democracy',
         reportUrl: 'https://securingdemocracy.gmfus.org/wp-content/uploads/2024/05/Laundromat-Paper.pdf',
         reportDate: '2024-05-01'
