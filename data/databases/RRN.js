@@ -2,7 +2,7 @@
 // Source: Rapport VIGINUM - 19 juin 2023
 // RRN: une campagne numérique de manipulation de l'information complexe et persistante
 
-const rrnCampaignDomains = [
+const rrnDomains = [
   // ===== DOMAINES PRINCIPAUX DE LA CAMPAGNE RRN =====
   {
     domain: "rrussianews.com",
@@ -1208,7 +1208,7 @@ const rrnCampaignDomains = [
 
 // Export pour utilisation dans d'autres modules
 if (typeof module !== 'undefined' && module.exports) {
-  module.exports = rrnCampaignDomains;
+  module.exports = rrnDomains;
 }
 
 // Note: Le rapport VIGINUM identifie 353 domaines au total. 

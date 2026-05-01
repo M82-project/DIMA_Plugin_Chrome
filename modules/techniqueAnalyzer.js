@@ -154,9 +154,10 @@ class TechniqueAnalyzer {
     results.contextBoosts = contextBoosts;
 
     // 5. Calcul du score
+    const textLength = fullText.length;
     results.score = results.matches.reduce(
-      (sum, match) => sum + match.weight,
-      0
+    (sum, match) => sum + match.weight * this.calculatePositionWeight(match.position, textLength),
+    0
     );
 
     // 6. Application des boosts contextuels
@@ -170,7 +171,7 @@ class TechniqueAnalyzer {
       technique,
       this.pageType
     );
-    let dynamicWeight = this.calculateDynamicWeight(technique, finalScore);
+    let dynamicWeight = this.calculateDynamicWeight(technique, results.matches.length);
 
     const totalWeight =
       (technique.weight || 1.0) * contextualWeight * dynamicWeight;
@@ -215,7 +216,9 @@ class TechniqueAnalyzer {
       const matches = this.findKeywordMatches(fullText, [keywordLower], 1.0);
 
       if (matches.length > 0) {
-        score += matches.length;
+        const textLength = fullText.length;
+        score += matches.reduce(
+        (sum, match) => sum + this.calculatePositionWeight(match.position, textLength),0);
         matchedKeywords.push({
           keyword,
           count: matches.length,

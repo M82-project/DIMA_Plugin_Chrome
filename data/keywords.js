@@ -13,8 +13,8 @@ const DIMA_ENHANCED_KEYWORDS = {
       },
     },
     patterns: [
-      /(?:par\s+exemple|for\s+example|comme\s+dans\s+le\s+cas)/i,
-      /(?:prenons\s+l'exemple|take\s+the\s+example)/i,
+      /(?:par\s+exemple|for\s+example|comme\s+dans\s+le\s+cas)/gi,
+      /(?:prenons\s+l'exemple|take\s+the\s+example)/gi,
     ],
   },
 
@@ -51,10 +51,10 @@ const DIMA_ENHANCED_KEYWORDS = {
       ],
     },
     patterns: [
-      /\d+\s+(?:choses|façons|méthodes|secrets|things|ways|methods)\s+(?:que|pour|de|to|that)/i,
-      /(?:voici|découvrez|here's|discover)\s+(?:comment|pourquoi|ce que|how|why|what)/i,
-      /(?:cette|cette|this)\s+\w+\s+va\s+vous\s+(?:\w+|will)/i,
-      /(?:shocking|amazing|incredible)\s+(?:secret|truth|fact)/i,
+      /\d+\s+(?:choses|façons|méthodes|secrets|things|ways|methods)\s+(?:que|pour|de|to|that)/gi,
+      /(?:voici|découvrez|here's|discover)\s+(?:comment|pourquoi|ce que|how|why|what)/gi,
+      /(?:cette|cette|this)\s+\w+\s+va\s+vous\s+(?:\w+|will)/gi,
+      /(?:shocking|amazing|incredible)\s+(?:secret|truth|fact)/gi,
     ],
   },
 
@@ -90,8 +90,8 @@ const DIMA_ENHANCED_KEYWORDS = {
       informal: ["c'est la cata", "on est foutu", "ça craint"],
     },
     patterns: [
-      /(?:alerte|alert|warning|attention)\s+(?:rouge|red|maximum)/i,
-      /(?:situation|crisis|problem)\s+(?:critique|critical|dramatique|dramatic)/i,
+      /(?:alerte|alert|warning|attention)\s+(?:rouge|red|maximum)/gi,
+      /(?:situation|crisis|problem)\s+(?:critique|critical|dramatique|dramatic)/gi,
     ],
   },
 
@@ -124,8 +124,8 @@ const DIMA_ENHANCED_KEYWORDS = {
       ],
     },
     patterns: [
-      /(?:seulement|only)\s+\d+\s+(?:jours?|heures?|minutes?|days?|hours?|minutes?)/i,
-      /(?:expire|ends?)\s+(?:bientôt|soon|today|demain|tomorrow)/i,
+      /(?:seulement|only)\s+\d+\s+(?:jours?|heures?|minutes?|days?|hours?|minutes?)/gi,
+      /(?:expire|ends?)\s+(?:bientôt|soon|today|demain|tomorrow)/gi,
     ],
   },
   TE0251: {
@@ -147,8 +147,8 @@ const DIMA_ENHANCED_KEYWORDS = {
       ]
     },
     patterns: [
-      /(?:tout le monde|everyone)\s+(?:sait|knows?|dit|says?)/i,
-      /(?:la plupart|most)\s+(?:des gens|people)\s+(?:pensent|think)/i
+      /(?:tout le monde|everyone)\s+(?:sait|knows?|dit|says?)/gi,
+      /(?:la plupart|most)\s+(?:des gens|people)\s+(?:pensent|think)/gi
     ],
   },
 
@@ -160,9 +160,9 @@ const DIMA_ENHANCED_KEYWORDS = {
       appeal_phrases: ["selon les experts", "la science prouve", "études montrent", "scientifiquement prouvé"]
     },
     patterns: [
-    /(?:selon|according to)\s+(?:les?\s+)?(?:experts?|spécialistes?)/i,
-    /(?:étude|study|research)\s+(?:révèle|shows?|démontre)/i,
-    /(?:Dr\.|Prof\.|PhD)\s+\w+\s+(?:affirme|says?)/i
+    /(?:selon|according to)\s+(?:les?\s+)?(?:experts?|spécialistes?)/gi,
+    /(?:étude|study|research)\s+(?:révèle|shows?|démontre)/gi,
+    /(?:Dr\.|Prof\.|PhD)\s+\w+\s+(?:affirme|says?)/gi
     ],
   },
 
@@ -209,28 +209,28 @@ const DIMA_ENHANCED_KEYWORDS = {
   },
   patterns: [
     // Expressions "après + investissement"
-    /(?:après|given|vu)\s+(?:tant|so much|all|le|tout)\s+(?:d[e'])?(?:temps|argent|efforts?|time|money|effort)/i,
+    /(?:après|given|vu)\s+(?:tant|so much|all|le|tout)\s+(?:d[e'])?(?:temps|argent|efforts?|time|money|effort)/gi,
     
     // "Trop tard pour..."
-    /(?:trop\s+tard|too\s+late)\s+(?:pour|to)\s+(?:reculer|arrêter|abandonner|back\s+out|stop|give\s+up)/i,
+    /(?:trop\s+tard|too\s+late)\s+(?:pour|to)\s+(?:reculer|arrêter|abandonner|back\s+out|stop|give\s+up)/gi,
     
     // "Maintenant qu'on a..."
-    /(?:maintenant\s+qu'on|now\s+that\s+we|puisqu'on)\s+(?:a|have)/i,
+    /(?:maintenant\s+qu'on|now\s+that\s+we|puisqu'on)\s+(?:a|have)/gi,
     
     // Point de non-retour
-    /(?:point\s+de\s+non-retour|point\s+of\s+no\s+return)/i,
+    /(?:point\s+de\s+non-retour|point\s+of\s+no\s+return)/gi,
     
     // Gaspillage
-    /(?:ce serait|it would be)\s+(?:du\s+)?(?:gâchis|a\s+waste)/i,
+    /(?:ce serait|it would be)\s+(?:du\s+)?(?:gâchis|a\s+waste)/gi,
     
     // "Déjà investi/dépensé"
-    /(?:déjà|already)\s+(?:investi|invested|dépensé|spent|mis|put\s+in)/i,
+    /(?:déjà|already)\s+(?:investi|invested|dépensé|spent|mis|put\s+in)/gi,
     
     // "On ne peut plus..."
-    /(?:on\s+ne\s+peut\s+plus|can't|cannot)\s+(?:reculer|arrêter|abandonner|turn\s+back|go\s+back|stop)/i,
+    /(?:on\s+ne\s+peut\s+plus|can't|cannot)\s+(?:reculer|arrêter|abandonner|turn\s+back|go\s+back|stop)/gi,
     
     // "Coûts irrécupérables"
-    /(?:coûts?\s+irrécupérables?|sunk\s+costs?)/i
+    /(?:coûts?\s+irrécupérables?|sunk\s+costs?)/gi
     ]
   },
   TE0424: {
@@ -263,25 +263,25 @@ const DIMA_ENHANCED_KEYWORDS = {
     },
     patterns: [
       // "Plus que X" / "Seulement X"
-      /(?:plus\s+que|seulement|only|just)\s+\d+\s+(?:places?|exemplaires?|pièces?|left|remaining)/i,
+      /(?:plus\s+que|seulement|only|just)\s+\d+\s+(?:places?|exemplaires?|pièces?|left|remaining)/gi,
       
       // "Stock limité" / "Quantité limitée"
-      /(?:stock|quantité|quantity)\s+(?:limité|limitée|limited|restreinte?)/i,
+      /(?:stock|quantité|quantity)\s+(?:limité|limitée|limited|restreinte?)/gi,
       
       // "Édition limitée" / "Série limitée"
-      /(?:édition|série|collection)\s+(?:limitée?|exclusive?|limited)/i,
+      /(?:édition|série|collection)\s+(?:limitée?|exclusive?|limited)/gi,
       
       // "Pour une durée limitée"
-      /(?:pour|for)\s+(?:une?\s+)?(?:durée|temps|time)\s+(?:limité|limitée?|limited)/i,
+      /(?:pour|for)\s+(?:une?\s+)?(?:durée|temps|time)\s+(?:limité|limitée?|limited)/gi,
       
       // "Tant que" / "Jusqu'à épuisement"
-      /(?:tant\s+que|while|jusqu'à|until)\s+(?:les\s+stocks?\s+durent|supplies?\s+last|épuisement|sold\s+out)/i,
+      /(?:tant\s+que|while|jusqu'à|until)\s+(?:les\s+stocks?\s+durent|supplies?\s+last|épuisement|sold\s+out)/gi,
       
       // "Presque épuisé" / "Bientôt épuisé"
-      /(?:presque|bientôt|almost|nearly)\s+(?:épuisé|vendu|sold\s+out)/i,
+      /(?:presque|bientôt|almost|nearly)\s+(?:épuisé|vendu|sold\s+out)/gi,
       
       // "Réservé à" / "Accès limité"
-      /(?:réservé|reserved|limité|limited)\s+(?:à|aux|to|for)\s+(?:membres?|VIP|privilégiés?)/i
+      /(?:réservé|reserved|limité|limited)\s+(?:à|aux|to|for)\s+(?:membres?|VIP|privilégiés?)/gi
     ]
   },
 
@@ -320,25 +320,25 @@ const DIMA_ENHANCED_KEYWORDS = {
     },
     patterns: [
       // "Commencez par" / "Start with"
-      /(?:commencez|commencer|démarrez|start|begin)\s+(?:par|with|maintenant|now|aujourd'hui|today)/i,
+      /(?:commencez|commencer|démarrez|start|begin)\s+(?:par|with|maintenant|now|aujourd'hui|today)/gi,
       
       // "Essai gratuit" / "Free trial"
-      /(?:essai|trial|test|démo)\s+(?:gratuit|free|sans\s+engagement)/i,
+      /(?:essai|trial|test|démo)\s+(?:gratuit|free|sans\s+engagement)/gi,
       
       // "Sans engagement" / "No commitment"
-      /(?:sans|no|aucun)\s+(?:engagement|obligation|commitment|strings)/i,
+      /(?:sans|no|aucun)\s+(?:engagement|obligation|commitment|strings)/gi,
       
       // "Juste" / "Il suffit de"
-      /(?:juste|just|il\s+suffit\s+de|simply|only|all\s+you\s+need)/i,
+      /(?:juste|just|il\s+suffit\s+de|simply|only|all\s+you\s+need)/gi,
       
       // "Quelques minutes" / "Few clicks"
-      /(?:quelques?|few|just)\s+(?:minutes?|secondes?|clics?|clicks?)/i,
+      /(?:quelques?|few|just)\s+(?:minutes?|secondes?|clics?|clicks?)/gi,
       
       // "Inscrivez-vous" / "Sign up"
-      /(?:inscrivez-vous|sign\s+up|rejoignez|join|créez|create)\s+(?:maintenant|now|gratuitement|free)?/i,
+      /(?:inscrivez-vous|sign\s+up|rejoignez|join|créez|create)\s+(?:maintenant|now|gratuitement|free)?/gi,
       
       // "Vous pouvez annuler"
-      /(?:vous\s+pouvez|you\s+can)\s+(?:annuler|cancel|résilier|stop)/i
+      /(?:vous\s+pouvez|you\s+can)\s+(?:annuler|cancel|résilier|stop)/gi
     ]
   },
 
@@ -379,31 +379,31 @@ const DIMA_ENHANCED_KEYWORDS = {
     },
     patterns: [
       // "En retour" / "In return"
-      /(?:en\s+retour|in\s+return|en\s+échange|in\s+exchange)/i,
+      /(?:en\s+retour|in\s+return|en\s+échange|in\s+exchange)/gi,
       
       // "Rendre" + service/faveur
-      /(?:rendre|return)\s+(?:la\s+pareille|un?\s+service|the\s+favor|a\s+favor)/i,
+      /(?:rendre|return)\s+(?:la\s+pareille|un?\s+service|the\s+favor|a\s+favor)/gi,
       
       // "Vous devez" / "You owe"
-      /(?:vous\s+devez|you\s+(?:should|must|owe))/i,
+      /(?:vous\s+devez|you\s+(?:should|must|owe))/gi,
       
       // "Après tout ce qu'on a fait"
-      /(?:après|after)\s+(?:tout\s+ce\s+qu'on|all\s+(?:we'?ve?|that))\s+(?:a\s+fait|done)/i,
+      /(?:après|after)\s+(?:tout\s+ce\s+qu'on|all\s+(?:we'?ve?|that))\s+(?:a\s+fait|done)/gi,
       
       // "On vous a aidé" / "We helped you"
-      /(?:on|nous)\s+(?:vous\s+)?(?:a|avons)\s+(?:aidé|offert|donné|helped|offered|given)/i,
+      /(?:on|nous)\s+(?:vous\s+)?(?:a|avons)\s+(?:aidé|offert|donné|helped|offered|given)/gi,
       
       // "Cadeau gratuit"
-      /(?:cadeau|bonus|gift)\s+(?:gratuit|free|offert|offered)/i,
+      /(?:cadeau|bonus|gift)\s+(?:gratuit|free|offert|offered)/gi,
       
       // "À votre tour" / "Your turn"
-      /(?:à\s+votre|your|maintenant\s+c'est\s+à\s+vous|now\s+it'?s\s+your)\s+(?:tour|turn)/i,
+      /(?:à\s+votre|your|maintenant\s+c'est\s+à\s+vous|now\s+it'?s\s+your)\s+(?:tour|turn)/gi,
       
       // "La moindre des choses"
-      /(?:la\s+moindre\s+des\s+choses|the\s+least\s+you\s+can\s+do)/i,
+      /(?:la\s+moindre\s+des\s+choses|the\s+least\s+you\s+can\s+do)/gi,
       
       // "Montrez votre gratitude"
-      /(?:montrez?|show)\s+(?:votre|your)\s+(?:gratitude|reconnaissance|appreciation)/i
+      /(?:montrez?|show)\s+(?:votre|your)\s+(?:gratitude|reconnaissance|appreciation)/gi
     ]
   },
 };
@@ -411,36 +411,36 @@ const DIMA_ENHANCED_KEYWORDS = {
 const CONTEXT_PATTERNS = {
   urgency: {
     patterns: [
-      /(?:urgent|rapidement|vite|immédiatement|maintenant|now|quickly|immediately)/i,
-      /(?:dernière\s+chance|temps\s+limité|offre\s+limitée|last\s+chance|limited\s+time)/i,
-      /(?:dépêchez-vous|ne\s+ratez\s+pas|hurry|don't\s+miss)/i,
+      /(?:urgent|rapidement|vite|immédiatement|maintenant|now|quickly|immediately)/gi,
+      /(?:dernière\s+chance|temps\s+limité|offre\s+limitée|last\s+chance|limited\s+time)/gi,
+      /(?:dépêchez-vous|ne\s+ratez\s+pas|hurry|don't\s+miss)/gi,
     ],
     boost: 1.3,
     techniques: ["TE0501", "TE0414"],
   },
   authority: {
     patterns: [
-      /(?:selon\s+(?:les\s+)?(?:experts?|spécialistes?|docteurs?|doctors?|experts?))/i,
-      /(?:étude\s+(?:révèle|montre|démontre|shows?|reveals?))/i,
-      /(?:recherche\s+(?:scientifique|universitaire|scientific|university))/i,
+      /(?:selon\s+(?:les\s+)?(?:experts?|spécialistes?|docteurs?|doctors?|experts?))/gi,
+      /(?:étude\s+(?:révèle|montre|démontre|shows?|reveals?))/gi,
+      /(?:recherche\s+(?:scientifique|universitaire|scientific|university))/gi,
     ],
     boost: 1.4,
-    techniques: ["TE0422", "TE0212"],
+    techniques: ["TE0422"],
   },
   social_proof: {
     patterns: [
-      /(?:\d+(?:\.\d+)?[km]?\s+personnes?\s+(?:utilisent|font|pensent|people\s+(?:use|do|think)))/i,
-      /(?:tout\s+le\s+monde|la\s+plupart\s+des\s+gens|everyone|most\s+people)/i,
-      /(?:viral|tendance|populaire|trending|popular)/i,
+      /(?:\d+(?:\.\d+)?[km]?\s+personnes?\s+(?:utilisent|font|pensent|people\s+(?:use|do|think)))/gi,
+      /(?:tout\s+le\s+monde|la\s+plupart\s+des\s+gens|everyone|most\s+people)/gi,
+      /(?:viral|tendance|populaire|trending|popular)/gi,
     ],
     boost: 1.2,
-    techniques: ["TE0251", "TE0221"],
+    techniques: ["TE0251"],
   },
   scarcity: {
     patterns: [
-      /(?:stock|quantité|places?)\s+(?:limité|limited)/i,
-      /(?:plus\s+que|only)\s+\d+/i,
-      /(?:édition|série)\s+limitée?/i
+      /(?:stock|quantité|places?)\s+(?:limité|limited)/gi,
+      /(?:plus\s+que|only)\s+\d+/gi,
+      /(?:édition|série)\s+limitée?/gi
     ],
     boost: 1.3,
     techniques: ["TE0424", "TE0414"], // Rareté + FOMO se renforcent
@@ -448,9 +448,9 @@ const CONTEXT_PATTERNS = {
   
   low_barrier: {
     patterns: [
-      /(?:gratuit|free|sans\s+engagement|no\s+commitment)/i,
-      /(?:essai|trial|test)/i,
-      /(?:commencez|start|inscrivez)/i
+      /(?:gratuit|free|sans\s+engagement|no\s+commitment)/gi,
+      /(?:essai|trial|test)/gi,
+      /(?:commencez|start|inscrivez)/gi
     ],
     boost: 1.2,
     techniques: ["TE0425", "TE0426"], // Pied dans la porte + Réciprocité
@@ -458,9 +458,9 @@ const CONTEXT_PATTERNS = {
   
   obligation: {
     patterns: [
-      /(?:vous\s+devez|you\s+(?:should|must|owe))/i,
-      /(?:en\s+retour|in\s+return)/i,
-      /(?:après\s+tout|after\s+all)/i
+      /(?:vous\s+devez|you\s+(?:should|must|owe))/gi,
+      /(?:en\s+retour|in\s+return)/gi,
+      /(?:après\s+tout|after\s+all)/gi
     ],
     boost: 1.4,
     techniques: ["TE0426"],
