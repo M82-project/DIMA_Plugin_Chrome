@@ -85,10 +85,10 @@ class ContentExtractor {
       const paragraphs = document.body.querySelectorAll("p, h1, h2, h3, h4, h5, h6, li");
       const fallbackTexts = new Set();
       content += this.extractTextFromElements(paragraphs, fallbackTexts, 50);
-      
-        // body.innerText uniquement si toujours insuffisant
+
+      // body.innerText uniquement si toujours insuffisant
       if (content.length < 200) {
-      content = this.cleanText(document.body.innerText).substring(0, this.settings.maxContentLength);
+        content = this.cleanText(document.body.innerText).substring(0, this.settings.maxContentLength);
       }
     }
 
