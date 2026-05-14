@@ -130,9 +130,9 @@ class ContentExtractor {
     const skipTags = ["ins", "iframe", "script", "style", "noscript"];
     if (skipTags.includes(element.tagName?.toLowerCase())) return true;
     const skipClasses = [
-     // Navigation / structure
-     "nav", "menu", "footer", "header", "sidebar", "breadcrumb", "pagination",
-       // Publicité — génériques
+      // Navigation / structure
+      "nav", "menu", "footer", "header", "sidebar", "breadcrumb", "pagination",
+      // Publicité — génériques
       "ad", "ads", "advert", "advertisement",
       // Publicité — régies et formats connus
       "adsbygoogle", "dfp", "gpt-ad", "publi", "sponsor", "sponsored",
@@ -154,32 +154,51 @@ class ContentExtractor {
     const adDataAttributes = [
       "data-ad", "data-ads", "data-ad-slot", "data-ad-unit", "data-adunit",
       "data-google-query-id", "data-adsbygoogle-status", "data-ad-client",
-     ];
+    ];
 
-    const className = (typeof element.className === "string" ? element.className : "").toLowerCase();
+    const matchesSkipPattern = (value, skip) => {
+      if (!value) return false;
+      const escapedSkip = skip.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+      return new RegExp(`(^|[-_])${escapedSkip}([-_]|$)`).test(value);
+    };
+
+    const classTokens = Array.from(element.classList || [], (token) =>
+      token.toLowerCase()
+    );
+
     const id = element.id?.toLowerCase() || "";
 
-    if (skipClasses.some((skip) => className.includes(skip))) return true;
-   if (skipIds.some((skip) => id.includes(skip))) return true;
-   if (adDataAttributes.some((attr) => element.hasAttribute(attr))) return true;
-   if (element.getAttribute("aria-hidden") === "true") return true;
-   if (["banner", "navigation", "complementary"].includes(element.getAttribute("role"))) return true;
-   if (getComputedStyle(element).display === "none") return true;
+    if (
+      skipClasses.some((skip) =>
+        classTokens.some((token) => matchesSkipPattern(token, skip))
+      )
+    ) {
+      return true;
+    }
+    if (skipIds.some((skip) => matchesSkipPattern(id, skip))) return true;
+    if (adDataAttributes.some((attr) => element.hasAttribute(attr))) return true;
+    if (element.getAttribute("aria-hidden") === "true") return true;
+    if (["banner", "navigation", "complementary"].includes(element.getAttribute("role"))) return true;
+    if (getComputedStyle(element).display === "none") return true;
 
-   // Vérification des ancêtres (profondeur 5)
-   let parent = element.parentElement;
-   for (let depth = 0; parent && depth < 5; depth++) {
-     const parentClass = (typeof parent.className === "string" ? parent.className : "").toLowerCase();
-     const parentId = parent.id?.toLowerCase() || "";
-     if (
-       skipClasses.some((skip) => parentClass.includes(skip)) ||
-       skipIds.some((skip) => parentId.includes(skip)) ||
-       adDataAttributes.some((attr) => parent.hasAttribute(attr))
-     ) return true;
-     parent = parent.parentElement;
-   }
+    // Vérification des ancêtres (profondeur 5)
+    let parent = element.parentElement;
+    for (let depth = 0; parent && depth < 5; depth++) {
+      const parentClassTokens = Array.from(parent.classList || [], (token) =>
+        token.toLowerCase()
+      );
+      const parentId = parent.id?.toLowerCase() || "";
+      if (
+        skipClasses.some((skip) =>
+          parentClassTokens.some((token) => matchesSkipPattern(token, skip))
+        ) ||
+        skipIds.some((skip) => matchesSkipPattern(parentId, skip)) ||
+        adDataAttributes.some((attr) => parent.hasAttribute(attr))
+      ) return true;
+      parent = parent.parentElement;
+    }
 
-   return false;
+    return false;
   }
 
   cleanText(text) {
