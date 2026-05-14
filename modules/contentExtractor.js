@@ -81,9 +81,15 @@ class ContentExtractor {
 
     // Dernier recours
     if (content.length < 200) {
-      this.log("Dernier recours - texte visible");
-      const bodyText = this.cleanText(document.body.innerText);
-      content = bodyText.substring(0, this.settings.maxContentLength);
+      this.log("Dernier recours - texte visible filtré");
+      const paragraphs = document.body.querySelectorAll("p, h1, h2, h3, h4, h5, h6, li");
+      const fallbackTexts = new Set();
+      content += this.extractTextFromElements(paragraphs, fallbackTexts, 50);
+      
+        // body.innerText uniquement si toujours insuffisant
+      if (content.length < 200) {
+      content = this.cleanText(document.body.innerText).substring(0, this.settings.maxContentLength);
+      }
     }
 
     const finalContent = content
@@ -120,44 +126,60 @@ class ContentExtractor {
   }
 
   shouldSkipElement(element) {
+    // Balises structurellement publicitaires ou non-éditoriales
+    const skipTags = ["ins", "iframe", "script", "style", "noscript"];
+    if (skipTags.includes(element.tagName?.toLowerCase())) return true;
     const skipClasses = [
-      "nav",
-      "menu",
-      "footer",
-      "header",
-      "sidebar",
-      "ad",
-      "advertisement",
-      "social",
-      "share",
+     // Navigation / structure
+     "nav", "menu", "footer", "header", "sidebar", "breadcrumb", "pagination",
+       // Publicité — génériques
+      "ad", "ads", "advert", "advertisement",
+      // Publicité — régies et formats connus
+      "adsbygoogle", "dfp", "gpt-ad", "publi", "sponsor", "sponsored",
+      "partner", "outbrain", "taboola", "teads", "criteo", "dianomi",
+      "smartad", "smartclip", "adsense",
+      // Social / partage
+      "social", "share", "sharing",
+      // Éléments parasites
       "cookie", "popup", "modal", "overlay", "banner", "newsletter",
-    "related", "suggest", "recommend", "widget", "promo", "promotion",
-    "comment", "rating", "review", "breadcrumb", "pagination", "tag",
-    "metadata", "byline", "author-bio", "subscription", "paywall"
+      "related", "suggest", "recommend", "widget", "promo", "promotion",
+      "comment", "rating", "review", "tag", "metadata", "byline",
+      "author-bio", "subscription", "paywall"
     ];
+    
     const skipIds = ["nav", "menu", "footer", "header", "sidebar", "comments","cookie-banner", "newsletter", "popup", "modal", "overlay",
-    "related-articles", "advertisement", "social-sharing"];
-    const skipAttributes = [
-    'data-module="Advertisement"',
-    'data-component="SocialShare"', 
-    'data-track-component="Newsletter"',
-    'role="banner"',
-    'role="navigation"',
-    'role="complementary"'
-    ];
+    "related-articles", "advertisement", "social-sharing","google_ads", "dfp", "gpt"];
 
-    const className = element.className?.toLowerCase() || "";
+    // Attributs data spécifiques aux régies publicitaires
+    const adDataAttributes = [
+      "data-ad", "data-ads", "data-ad-slot", "data-ad-unit", "data-adunit",
+      "data-google-query-id", "data-adsbygoogle-status", "data-ad-client",
+     ];
+
+    const className = (typeof element.className === "string" ? element.className : "").toLowerCase();
     const id = element.id?.toLowerCase() || "";
 
-    return (
-      skipClasses.some((skip) => className.includes(skip)) ||
-      skipIds.some((skip) => id.includes(skip)) ||
-      skipAttributes.some((attr) => element.getAttribute(attr.split('=')[0]) === attr.split('=')[1]?.replace(/"/g, '')) ||
-      element.getAttribute("aria-hidden") === "true" ||
-      element.getAttribute("role") === "banner" ||
-      element.getAttribute("role") === "navigation" ||
-      getComputedStyle(element).display === "none"
-    );
+    if (skipClasses.some((skip) => className.includes(skip))) return true;
+   if (skipIds.some((skip) => id.includes(skip))) return true;
+   if (adDataAttributes.some((attr) => element.hasAttribute(attr))) return true;
+   if (element.getAttribute("aria-hidden") === "true") return true;
+   if (["banner", "navigation", "complementary"].includes(element.getAttribute("role"))) return true;
+   if (getComputedStyle(element).display === "none") return true;
+
+   // Vérification des ancêtres (profondeur 5)
+   let parent = element.parentElement;
+   for (let depth = 0; parent && depth < 5; depth++) {
+     const parentClass = (typeof parent.className === "string" ? parent.className : "").toLowerCase();
+     const parentId = parent.id?.toLowerCase() || "";
+     if (
+       skipClasses.some((skip) => parentClass.includes(skip)) ||
+       skipIds.some((skip) => parentId.includes(skip)) ||
+       adDataAttributes.some((attr) => parent.hasAttribute(attr))
+     ) return true;
+     parent = parent.parentElement;
+   }
+
+   return false;
   }
 
   cleanText(text) {
