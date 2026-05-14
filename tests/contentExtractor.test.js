@@ -76,6 +76,11 @@ describe('ContentExtractor.detectPageType', () => {
     ['https://businessnews.example.com/foo', 'general'],
     // Regression: path-level 'news' wins, even if hostname is unrelated.
     ['https://buyer-news.example.com/article', 'news'],
+    // Copilot review feedback (PR #23): /articles/ and /blogs/ must match
+    // their singular stems — matchWord previously left them in 'general'.
+    ['https://example.com/articles/foo', 'news'],
+    ['https://example.com/blogs/post', 'blog'],
+    ['https://blogs.example.com/foo', 'blog'],
   ];
 
   for (const [url, expected] of cases) {
