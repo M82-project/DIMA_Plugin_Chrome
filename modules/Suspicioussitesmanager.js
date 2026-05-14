@@ -175,8 +175,11 @@ class SuspiciousSitesManager {
       this.log(`  ✓ Source laundromat chargée: ${laundromatDomains.length} domaines`);
     }
     
-    // Avertissement si aucune source n'est chargée
-    if (this.sources.size === 0) {
+    // Avertissement si aucune source n'est chargée. Gardé derrière le flag
+    // debug : c'est une condition "configuration" (l'ordre de chargement
+    // dans manifest.json est incorrect) et non un signal qui doit polluer
+    // chaque console de page hôte.
+    if (this.sources.size === 0 && this.debug) {
       console.warn('⚠️  DIMA: Aucune base de données de sites suspects n\'a été chargée');
       console.warn('   Vérifiez que les fichiers de bases de données sont correctement chargés avant ce gestionnaire');
     }
@@ -198,8 +201,8 @@ class SuspiciousSitesManager {
    */
   aggregateAllSites() {
     this.allSites = [];
-    
-    for (const [sourceName, sourceData] of this.sources) {
+
+    for (const [, sourceData] of this.sources) {
       this.allSites.push(...sourceData.domains);
     }
   }
@@ -577,6 +580,12 @@ class SuspiciousSitesManager {
 // pendant laquelle `window.checkSuspiciousSite` n'existait pas, forçant
 // content.js à boucler sur ses retries pendant >=100ms à chaque page.
 if (typeof window !== 'undefined') {
+  // Expose la classe (utile pour les tests et pour le rechargement à chaud)
+  window.SuspiciousSitesManager = SuspiciousSitesManager;
+
+  // Init synchrone: en MV3 avec `run_at: document_end` et l'ordre déclaré
+  // dans manifest.json, toutes les bases (copycopDomains, ...) sont déjà
+  // chargées à ce point. Pas besoin de différer.
   const suspiciousSitesManager = new SuspiciousSitesManager();
 
   // Rendre disponible globalement
