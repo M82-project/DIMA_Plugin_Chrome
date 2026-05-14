@@ -8,6 +8,7 @@ class ContentExtractor {
       minKeywordLength: 3,
       debugMode: false,
     };
+    this.skipPatternCache = new Map();
   }
 
   log(message, data = null) {
@@ -125,6 +126,18 @@ class ContentExtractor {
     return text;
   }
 
+  getSkipPattern(skip) {
+    if (!this.skipPatternCache.has(skip)) {
+      const escapedSkip = skip.replace(/[\\^$.*+?()[\]{}|]/g, "\\$&");
+      this.skipPatternCache.set(
+        skip,
+        new RegExp(`(^|[-_])${escapedSkip}([-_]|$)`)
+      );
+    }
+
+    return this.skipPatternCache.get(skip);
+  }
+
   shouldSkipElement(element) {
     // Balises structurellement publicitaires ou non-éditoriales
     const skipTags = ["ins", "iframe", "script", "style", "noscript"];
@@ -156,25 +169,9 @@ class ContentExtractor {
       "data-google-query-id", "data-adsbygoogle-status", "data-ad-client",
     ];
 
-    if (!this.skipPatternCache) {
-      this.skipPatternCache = new Map();
-    }
-
-    const getSkipPattern = (skip) => {
-      if (!this.skipPatternCache.has(skip)) {
-        const escapedSkip = skip.replace(/[\\^$.*+?()[\]{}|]/g, "\\$&");
-        this.skipPatternCache.set(
-          skip,
-          new RegExp(`(^|[-_])${escapedSkip}([-_]|$)`)
-        );
-      }
-
-      return this.skipPatternCache.get(skip);
-    };
-
     const matchesSkipPattern = (value, skip) => {
       if (!value) return false;
-      return getSkipPattern(skip).test(value);
+      return this.getSkipPattern(skip).test(value);
     };
 
     const classTokens = Array.from(element.classList || [], (token) =>
