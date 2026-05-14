@@ -434,7 +434,7 @@ class SuspiciousSitesManager {
         },
         youtube: {
           domains: ['youtube.com'],
-          regex: /^\/([@c]\/)?([a-zA-Z0-9_-]+)(?:\/|$|\?)/
+          regex: /^\/(?:@|c\/|user\/)?([a-zA-Z0-9_-]+)(?:\/|$|\?)/
         },
         telegram: {
           domains: ['t.me', 'telegram.me'],
@@ -463,7 +463,7 @@ class SuspiciousSitesManager {
       // Extraire le handle
       const match = pathname.match(pattern.regex);
       if (match) {
-        const handle = accountType.toLowerCase() === 'youtube' ? (match[2] || match[1]) : match[1];
+        const handle = match[1];
         console.log(`DIMA: Handle extrait de ${accountType}: ${handle}`);
         return handle;
       }
