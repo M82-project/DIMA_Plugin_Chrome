@@ -1,6 +1,8 @@
 // UI Manager Module
 // Responsible for creating and managing the user interface elements
 
+const _extensionAPI = typeof browser !== 'undefined' ? browser : chrome;
+
 class UIManager {
   constructor(settings) {
     this.settings = settings || {
@@ -104,61 +106,81 @@ class UIManager {
     }
 
     createSuspiciousSiteAlert() {
-        const { siteInfo, riskConfig } = this.suspiciousSiteCheck;
-        
+        const { riskConfig } = this.suspiciousSiteCheck;
+        const safeColor = this.sanitizeHexColor(riskConfig.color);
+
         const alert = document.createElement('div');
         alert.id = 'dima-suspicious-alert';
-        
-        alert.innerHTML = `
-            <div style="display: flex; align-items: start; gap: 12px;">
-                <span style="font-size: 24px;">${riskConfig.icon}</span>
-                <div style="flex: 1;">
-                    <div style="font-weight: bold; margin-bottom: 4px; font-size: 14px;">
-                        ${riskConfig.label}
-                    </div>
-                    <div style="font-size: 12px; line-height: 1.4; margin-bottom: 8px;">
-                        Vigilance : ce site appartient à un dispositif de manipulation de l'information identifié.
-                    </div>
-                    <button id="dima-suspicious-details" style="
-                        background: white;
-                        color: ${riskConfig.color};
-                        border: none;
-                        padding: 6px 12px;
-                        border-radius: 6px;
-                        cursor: pointer;
-                        font-size: 11px;
-                        font-weight: 600;
-                        transition: all 0.2s;
-                    ">
-                        En savoir plus →
-                    </button>
-                </div>
-                <button id="dima-suspicious-close" style="
-                    background: none;
-                    border: none;
-                    color: white;
-                    cursor: pointer;
-                    font-size: 20px;
-                    padding: 0;
-                    width: 24px;
-                    height: 24px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    opacity: 0.7;
-                    transition: opacity 0.2s;
-                ">
-                    ×
-                </button>
-            </div>
+
+        const row = document.createElement('div');
+        row.style.cssText = 'display: flex; align-items: start; gap: 12px;';
+
+        const iconSpan = document.createElement('span');
+        iconSpan.style.fontSize = '24px';
+        iconSpan.textContent = riskConfig.icon || '⚠️';
+
+        const textBlock = document.createElement('div');
+        textBlock.style.flex = '1';
+
+        const labelDiv = document.createElement('div');
+        labelDiv.style.cssText = 'font-weight: bold; margin-bottom: 4px; font-size: 14px;';
+        labelDiv.textContent = riskConfig.label || '';
+
+        const warnDiv = document.createElement('div');
+        warnDiv.style.cssText = 'font-size: 12px; line-height: 1.4; margin-bottom: 8px;';
+        warnDiv.textContent = "Vigilance : ce site appartient à un dispositif de manipulation de l'information identifié.";
+
+        const detailsBtn = document.createElement('button');
+        detailsBtn.id = 'dima-suspicious-details';
+        detailsBtn.style.cssText = `
+            background: white;
+            color: ${safeColor};
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+            transition: all 0.2s;
         `;
-        
+        detailsBtn.textContent = 'En savoir plus →';
+
+        textBlock.appendChild(labelDiv);
+        textBlock.appendChild(warnDiv);
+        textBlock.appendChild(detailsBtn);
+
+        const closeBtn = document.createElement('button');
+        closeBtn.id = 'dima-suspicious-close';
+        closeBtn.type = 'button';
+        closeBtn.setAttribute('aria-label', "Fermer l'alerte");
+        closeBtn.style.cssText = `
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 20px;
+            padding: 0;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        `;
+        closeBtn.textContent = '×';
+
+        row.appendChild(iconSpan);
+        row.appendChild(textBlock);
+        row.appendChild(closeBtn);
+        alert.appendChild(row);
+
         alert.style.cssText = `
             position: fixed !important;
             top: 70px !important;
             right: 20px !important;
             z-index: 999998 !important;
-            background: linear-gradient(135deg, ${riskConfig.color}, ${this.adjustColor(riskConfig.color, -15)}) !important;
+            background: linear-gradient(135deg, ${safeColor}, ${this.adjustColor(safeColor, -15)}) !important;
             color: white !important;
             padding: 16px !important;
             border-radius: 12px !important;
@@ -171,47 +193,43 @@ class UIManager {
         `;
         
         document.body?.appendChild(alert);
-        
-        // Événements
-        document.getElementById('dima-suspicious-details')?.addEventListener('click', () => {
+
+        detailsBtn.addEventListener('click', () => {
             this.showSuspiciousSiteDetails();
         });
-        
-        document.getElementById('dima-suspicious-close')?.addEventListener('click', () => {
+        closeBtn.addEventListener('click', () => {
             alert.remove();
         });
-        
-        // Hover effects
-        const detailsBtn = document.getElementById('dima-suspicious-details');
-        if (detailsBtn) {
-            detailsBtn.addEventListener('mouseenter', () => {
-                detailsBtn.style.transform = 'translateY(-1px)';
-                detailsBtn.style.boxShadow = '0 2px 8px rgba(0,0,0,0.2)';
-            });
-            detailsBtn.addEventListener('mouseleave', () => {
-                detailsBtn.style.transform = 'translateY(0)';
-                detailsBtn.style.boxShadow = 'none';
-            });
-        }
-        
-        const closeBtn = document.getElementById('dima-suspicious-close');
-        if (closeBtn) {
-            closeBtn.addEventListener('mouseenter', () => {
-                closeBtn.style.opacity = '1';
-            });
-            closeBtn.addEventListener('mouseleave', () => {
-                closeBtn.style.opacity = '0.7';
-            });
-        }
+
+        detailsBtn.addEventListener('mouseenter', () => {
+            detailsBtn.style.transform = 'translateY(-1px)';
+            detailsBtn.style.boxShadow = '0 2px 8px rgba(0,0,0,0.2)';
+        });
+        detailsBtn.addEventListener('mouseleave', () => {
+            detailsBtn.style.transform = 'translateY(0)';
+            detailsBtn.style.boxShadow = 'none';
+        });
+
+        closeBtn.addEventListener('mouseenter', () => {
+            closeBtn.style.opacity = '1';
+        });
+        closeBtn.addEventListener('mouseleave', () => {
+            closeBtn.style.opacity = '0.7';
+        });
     }
 
     showSuspiciousSiteDetails() {
         const { siteInfo, riskConfig } = this.suspiciousSiteCheck;
-        
-        // Créer modal avec détails
+        const safeColor = this.sanitizeHexColor(riskConfig.color);
+
+        const previouslyFocused = document.activeElement;
+
         const detailsModal = document.createElement('div');
         detailsModal.id = 'dima-suspicious-details-modal';
-        
+        detailsModal.setAttribute('role', 'dialog');
+        detailsModal.setAttribute('aria-modal', 'true');
+        detailsModal.setAttribute('aria-labelledby', 'dima-suspicious-details-title');
+        detailsModal.tabIndex = -1;
         detailsModal.style.cssText = `
             position: fixed !important;
             top: 0 !important;
@@ -227,101 +245,245 @@ class UIManager {
             font-family: 'Segoe UI', Arial, sans-serif !important;
             animation: fadeIn 0.3s ease-out !important;
         `;
-        
-        const logoUrl = chrome.runtime.getURL('M82-logo-16.png');
-        
-        detailsModal.innerHTML = `
-            <div style="background: white; padding: 30px; border-radius: 20px; max-width: 600px; max-height: 90vh; overflow-y: auto; margin: 20px; box-shadow: 0 25px 50px rgba(0,0,0,0.3); animation: slideIn 0.3s ease-out;">
-                
-                <!-- En-tête -->
-                <div style="text-align: center; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 2px solid #f0f0f0;">
-                    <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 10px;">
-                        <img src="${logoUrl}" 
-                             style="width: 24px; height: 24px;" 
-                             alt="M82 Project"
-                             onerror="this.style.display='none'">
-                        <h2 style="color: #2c3e50; margin: 0; font-size: 1.8em;">Site Suspect Identifié</h2>
-                    </div>
-                    <div style="display: inline-block; background: ${riskConfig.color}; color: white; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600; margin-top: 10px;">
-                        ${riskConfig.icon} ${riskConfig.label}
-                    </div>
-                </div>
-                
-                <!-- Contenu -->
-                <div style="margin-bottom: 25px;">
-                    <div style="background: linear-gradient(135deg, #fff3cd, #ffeaa7); padding: 20px; border-radius: 12px; border-left: 4px solid ${riskConfig.color}; margin-bottom: 20px;">
-                        <h3 style="margin: 0 0 10px 0; color: #856404; font-size: 1.1em;">⚠️ Avertissement</h3>
-                        <p style="margin: 0; color: #856404; line-height: 1.6;">
-                            ${riskConfig.message}
-                        </p>
-                    </div>
-                    
-                    <div style="background: #f8f9fa; padding: 20px; border-radius: 12px; margin-bottom: 15px;">
-                        <h4 style="margin: 0 0 12px 0; color: #2c3e50; font-size: 1em;">📋 Détails de l'identification</h4>
-                        <div style="display: grid; gap: 12px;">
-                            <div>
-                                <strong style="color: #7f8c8d; font-size: 0.9em;">Raison :</strong>
-                                <div style="color: #2c3e50; margin-top: 4px;">${siteInfo.reason}</div>
-                            </div>
-                            <div>
-                                <strong style="color: #7f8c8d; font-size: 0.9em;">Source du rapport :</strong>
-                                <div style="color: #2c3e50; margin-top: 4px;">${siteInfo.source}</div>
-                            </div>
-                            <div>
-                                <strong style="color: #7f8c8d; font-size: 0.9em;">Date d'identification :</strong>
-                                <div style="color: #2c3e50; margin-top: 4px;">${new Date(siteInfo.identifiedDate).toLocaleDateString('fr-FR')}</div>
-                            </div>
-                            ${siteInfo.tags && siteInfo.tags.length > 0 ? `
-                            <div>
-                                <strong style="color: #7f8c8d; font-size: 0.9em;">Catégories :</strong>
-                                <div style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;">
-                                    ${siteInfo.tags.map(tag => `
-                                        <span style="background: #e9ecef; color: #495057; padding: 4px 10px; border-radius: 12px; font-size: 0.8em;">
-                                            ${tag}
-                                        </span>
-                                    `).join('')}
-                                </div>
-                            </div>
-                            ` : ''}
-                        </div>
-                    </div>
-                    
-                    <div style="background: #e8f4f8; padding: 16px; border-radius: 10px; border-left: 4px solid #17a2b8;">
-                        <h4 style="margin: 0 0 8px 0; color: #0c5460; font-size: 0.95em;">💡 Recommandations</h4>
-                        <ul style="margin: 0; padding-left: 20px; color: #0c5460; line-height: 1.6;">
-                            <li>Vérifiez les informations auprès de sources fiables</li>
-                            <li>Consultez plusieurs sources avant de partager</li>
-                            <li>Soyez attentif aux techniques de manipulation détectées</li>
-                            <li>Signalez le contenu suspect si nécessaire</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <!-- Actions -->
-                <div style="display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;">
-                    <button onclick="window.open('${siteInfo.reportUrl}', '_blank')" 
-                            style="background: #3498db; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: 500; transition: all 0.3s; box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3);">
-                        📄 Consulter le rapport complet
-                    </button>
-                    <button onclick="document.getElementById('dima-suspicious-details-modal').remove()" 
-                            style="background: #95a5a6; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: 500; transition: all 0.3s;">
-                        Fermer
-                    </button>
-                </div>
-                
-                <div style="text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid #e9ecef; color: #7f8c8d; font-size: 0.85em;">
-                    Base de données maintenue par 
-                    <a href="https://m82-project.org/" target="_blank" 
-                       style="color: #3498db; text-decoration: none; font-weight: 500;">M82 Project</a>
-                </div>
-            </div>
-        `;
-        
-        detailsModal.addEventListener('click', (e) => {
-            if (e.target === detailsModal) detailsModal.remove();
+
+        const logoUrl = _extensionAPI.runtime.getURL('M82-logo-16.png');
+
+        const card = document.createElement('div');
+        card.style.cssText = 'background: white; padding: 30px; border-radius: 20px; max-width: 600px; max-height: 90vh; overflow-y: auto; margin: 20px; box-shadow: 0 25px 50px rgba(0,0,0,0.3); animation: slideIn 0.3s ease-out;';
+
+        // En-tête
+        const header = document.createElement('div');
+        header.style.cssText = 'text-align: center; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 2px solid #f0f0f0;';
+
+        const headerRow = document.createElement('div');
+        headerRow.style.cssText = 'display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 10px;';
+
+        const logoImg = document.createElement('img');
+        logoImg.src = logoUrl;
+        logoImg.alt = 'M82 Project';
+        logoImg.style.cssText = 'width: 24px; height: 24px;';
+        logoImg.addEventListener('error', () => { logoImg.style.display = 'none'; });
+
+        const title = document.createElement('h2');
+        title.id = 'dima-suspicious-details-title';
+        title.style.cssText = 'color: #2c3e50; margin: 0; font-size: 1.8em;';
+        title.textContent = 'Site Suspect Identifié';
+
+        headerRow.appendChild(logoImg);
+        headerRow.appendChild(title);
+
+        const badge = document.createElement('div');
+        badge.style.cssText = `display: inline-block; background: ${safeColor}; color: white; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 600; margin-top: 10px;`;
+        badge.textContent = `${riskConfig.icon || ''} ${riskConfig.label || ''}`.trim();
+
+        header.appendChild(headerRow);
+        header.appendChild(badge);
+
+        // Contenu
+        const contentWrap = document.createElement('div');
+        contentWrap.style.marginBottom = '25px';
+
+        const warnBox = document.createElement('div');
+        warnBox.style.cssText = `background: linear-gradient(135deg, #fff3cd, #ffeaa7); padding: 20px; border-radius: 12px; border-left: 4px solid ${safeColor}; margin-bottom: 20px;`;
+        const warnTitle = document.createElement('h3');
+        warnTitle.style.cssText = 'margin: 0 0 10px 0; color: #856404; font-size: 1.1em;';
+        warnTitle.textContent = '⚠️ Avertissement';
+        const warnP = document.createElement('p');
+        warnP.style.cssText = 'margin: 0; color: #856404; line-height: 1.6;';
+        warnP.textContent = riskConfig.message || '';
+        warnBox.appendChild(warnTitle);
+        warnBox.appendChild(warnP);
+
+        const detailsBox = document.createElement('div');
+        detailsBox.style.cssText = 'background: #f8f9fa; padding: 20px; border-radius: 12px; margin-bottom: 15px;';
+        const detailsTitle = document.createElement('h4');
+        detailsTitle.style.cssText = 'margin: 0 0 12px 0; color: #2c3e50; font-size: 1em;';
+        detailsTitle.textContent = "📋 Détails de l'identification";
+        const detailsGrid = document.createElement('div');
+        detailsGrid.style.cssText = 'display: grid; gap: 12px;';
+
+        const makeField = (labelText, valueText) => {
+            const field = document.createElement('div');
+            const strong = document.createElement('strong');
+            strong.style.cssText = 'color: #7f8c8d; font-size: 0.9em;';
+            strong.textContent = labelText;
+            const value = document.createElement('div');
+            value.style.cssText = 'color: #2c3e50; margin-top: 4px;';
+            value.textContent = valueText;
+            field.appendChild(strong);
+            field.appendChild(value);
+            return field;
+        };
+
+        detailsGrid.appendChild(makeField('Raison :', siteInfo.reason || ''));
+        detailsGrid.appendChild(makeField('Source du rapport :', siteInfo.source || ''));
+        const dateText = siteInfo.identifiedDate
+            ? new Date(siteInfo.identifiedDate).toLocaleDateString('fr-FR')
+            : '';
+        detailsGrid.appendChild(makeField("Date d'identification :", dateText));
+
+        if (Array.isArray(siteInfo.tags) && siteInfo.tags.length > 0) {
+            const tagsField = document.createElement('div');
+            const tagsLabel = document.createElement('strong');
+            tagsLabel.style.cssText = 'color: #7f8c8d; font-size: 0.9em;';
+            tagsLabel.textContent = 'Catégories :';
+            const tagsRow = document.createElement('div');
+            tagsRow.style.cssText = 'display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px;';
+            siteInfo.tags.forEach(tag => {
+                const span = document.createElement('span');
+                span.style.cssText = 'background: #e9ecef; color: #495057; padding: 4px 10px; border-radius: 12px; font-size: 0.8em;';
+                span.textContent = String(tag);
+                tagsRow.appendChild(span);
+            });
+            tagsField.appendChild(tagsLabel);
+            tagsField.appendChild(tagsRow);
+            detailsGrid.appendChild(tagsField);
+        }
+
+        detailsBox.appendChild(detailsTitle);
+        detailsBox.appendChild(detailsGrid);
+
+        const recoBox = document.createElement('div');
+        recoBox.style.cssText = 'background: #e8f4f8; padding: 16px; border-radius: 10px; border-left: 4px solid #17a2b8;';
+        const recoTitle = document.createElement('h4');
+        recoTitle.style.cssText = 'margin: 0 0 8px 0; color: #0c5460; font-size: 0.95em;';
+        recoTitle.textContent = '💡 Recommandations';
+        const recoList = document.createElement('ul');
+        recoList.style.cssText = 'margin: 0; padding-left: 20px; color: #0c5460; line-height: 1.6;';
+        [
+            'Vérifiez les informations auprès de sources fiables',
+            'Consultez plusieurs sources avant de partager',
+            'Soyez attentif aux techniques de manipulation détectées',
+            'Signalez le contenu suspect si nécessaire',
+        ].forEach(text => {
+            const li = document.createElement('li');
+            li.textContent = text;
+            recoList.appendChild(li);
         });
-        
+        recoBox.appendChild(recoTitle);
+        recoBox.appendChild(recoList);
+
+        contentWrap.appendChild(warnBox);
+        contentWrap.appendChild(detailsBox);
+        contentWrap.appendChild(recoBox);
+
+        // Actions
+        const actions = document.createElement('div');
+        actions.style.cssText = 'display: flex; gap: 12px; justify-content: center; flex-wrap: wrap;';
+
+        if (this.isSafeHttpUrl(siteInfo.reportUrl)) {
+            const reportLink = document.createElement('a');
+            reportLink.href = siteInfo.reportUrl;
+            reportLink.target = '_blank';
+            reportLink.rel = 'noopener noreferrer';
+            reportLink.style.cssText = 'background: #3498db; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: 500; transition: all 0.3s; box-shadow: 0 2px 8px rgba(52, 152, 219, 0.3); text-decoration: none; display: inline-block;';
+            reportLink.textContent = '📄 Consulter le rapport complet';
+            actions.appendChild(reportLink);
+        }
+
+        const closeBtn = document.createElement('button');
+        closeBtn.type = 'button';
+        closeBtn.setAttribute('aria-label', 'Fermer la fenêtre de détails');
+        closeBtn.style.cssText = 'background: #95a5a6; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 15px; font-weight: 500; transition: all 0.3s;';
+        closeBtn.textContent = 'Fermer';
+
+        let cleanedUp = false;
+        const cleanup = () => {
+            if (cleanedUp) return;
+            cleanedUp = true;
+            document.removeEventListener('keydown', onKeyDown, true);
+            if (previouslyFocused && typeof previouslyFocused.focus === 'function') {
+                previouslyFocused.focus();
+            }
+        };
+        const closeModal = () => {
+            if (detailsModal.isConnected) detailsModal.remove();
+            cleanup();
+        };
+
+        // Focus trap: garde le focus à l'intérieur du dialog.
+        // Capture phase + stopPropagation pour empêcher les raccourcis
+        // globaux de la page hôte (Escape, Tab) de se déclencher.
+        const onKeyDown = (e) => {
+            if (e.key === 'Escape') {
+                e.preventDefault();
+                e.stopPropagation();
+                closeModal();
+                return;
+            }
+            if (e.key !== 'Tab') return;
+            const focusables = detailsModal.querySelectorAll(
+                'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+            );
+            if (focusables.length === 0) {
+                e.preventDefault();
+                e.stopPropagation();
+                detailsModal.focus();
+                return;
+            }
+            const first = focusables[0];
+            const last = focusables[focusables.length - 1];
+            const active = document.activeElement;
+            if (e.shiftKey && (active === first || !detailsModal.contains(active))) {
+                e.preventDefault();
+                e.stopPropagation();
+                last.focus();
+            } else if (!e.shiftKey && (active === last || !detailsModal.contains(active))) {
+                e.preventDefault();
+                e.stopPropagation();
+                first.focus();
+            } else {
+                // Tab à l'intérieur du dialog : on laisse le navigateur faire,
+                // mais on empêche la page hôte d'intercepter.
+                e.stopPropagation();
+            }
+        };
+        closeBtn.addEventListener('click', closeModal);
+        actions.appendChild(closeBtn);
+
+        const footer = document.createElement('div');
+        footer.style.cssText = 'text-align: center; margin-top: 20px; padding-top: 20px; border-top: 1px solid #e9ecef; color: #7f8c8d; font-size: 0.85em;';
+        footer.appendChild(document.createTextNode('Base de données maintenue par '));
+        const m82Link = document.createElement('a');
+        m82Link.href = 'https://m82-project.org/';
+        m82Link.target = '_blank';
+        m82Link.rel = 'noopener noreferrer';
+        m82Link.style.cssText = 'color: #3498db; text-decoration: none; font-weight: 500;';
+        m82Link.textContent = 'M82 Project';
+        footer.appendChild(m82Link);
+
+        card.appendChild(header);
+        card.appendChild(contentWrap);
+        card.appendChild(actions);
+        card.appendChild(footer);
+        detailsModal.appendChild(card);
+
+        detailsModal.addEventListener('click', (e) => {
+            if (e.target === detailsModal) closeModal();
+        });
+        document.addEventListener('keydown', onKeyDown, true);
+
         document.body.appendChild(detailsModal);
+        closeBtn.focus();
+    }
+
+    sanitizeHexColor(color) {
+        // Restreint à #RRGGBB car adjustColor() ne gère que ce format.
+        const fallback = '#c0392b';
+        if (typeof color !== 'string') return fallback;
+        return /^#[0-9a-fA-F]{6}$/.test(color) ? color : fallback;
+    }
+
+    isSafeHttpUrl(url) {
+        if (typeof url !== 'string' || !/^https?:\/\//i.test(url)) {
+            return false;
+        }
+        try {
+            const parsed = new URL(url);
+            return parsed.protocol === 'https:' || parsed.protocol === 'http:';
+        } catch (_) {
+            return false;
+        }
     }
 
     adjustColor(color, amount) {
@@ -561,24 +723,26 @@ ${techniques.map(t => `• ${t.nom}`).join('\n')}`;
                 animation: fadeIn 0.3s ease-out !important;
             `;
 
-            const logoUrl = chrome.runtime.getURL('M82-logo-16.png');
+            const logoUrl = _extensionAPI.runtime.getURL('M82-logo-16.png');
             
             // Construire le contenu avec alerte site suspect si nécessaire
+            // Note : les valeurs page-controlled (title, url) et user-DB-controlled
+            // (riskConfig.label/message, siteInfo.*) sont injectées via textContent
+            // après l'innerHTML pour éviter toute injection HTML.
             let suspiciousAlert = '';
+            let suspiciousSafeColor = '';
             if (this.suspiciousSiteCheck.isSuspicious) {
-                const { riskConfig, siteInfo } = this.suspiciousSiteCheck;
+                suspiciousSafeColor = this.sanitizeHexColor(this.suspiciousSiteCheck.riskConfig.color);
                 suspiciousAlert = `
-                    <div style="background: linear-gradient(135deg, ${riskConfig.color}, ${this.adjustColor(riskConfig.color, -15)}); color: white; padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 2px solid rgba(255,255,255,0.2);">
+                    <div style="background: linear-gradient(135deg, ${suspiciousSafeColor}, ${this.adjustColor(suspiciousSafeColor, -15)}); color: white; padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 2px solid rgba(255,255,255,0.2);">
                         <div style="display: flex; align-items: start; gap: 12px;">
-                            <span style="font-size: 28px;">${riskConfig.icon}</span>
+                            <span style="font-size: 28px;" data-dima-placeholder="suspicious-icon"></span>
                             <div style="flex: 1;">
-                                <h3 style="margin: 0 0 8px 0; font-size: 1.2em;">${riskConfig.label}</h3>
-                                <p style="margin: 0 0 12px 0; font-size: 0.95em; line-height: 1.5;">
-                                    ${riskConfig.message}
-                                </p>
-                                <button onclick="document.getElementById('dima-suspicious-details-modal')?.remove(); document.querySelector('#dima-modal .suspicious-details-btn').click()" 
+                                <h3 style="margin: 0 0 8px 0; font-size: 1.2em;" data-dima-placeholder="suspicious-label"></h3>
+                                <p style="margin: 0 0 12px 0; font-size: 0.95em; line-height: 1.5;" data-dima-placeholder="suspicious-message"></p>
+                                <button type="button"
                                         class="suspicious-details-btn"
-                                        style="background: white; color: ${riskConfig.color}; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.2s;">
+                                        style="background: white; color: ${suspiciousSafeColor}; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; transition: all 0.2s;">
                                     Voir les détails du rapport →
                                 </button>
                             </div>
@@ -633,8 +797,8 @@ ${techniques.map(t => `• ${t.nom}`).join('\n')}`;
                     <!-- Informations sur la page -->
                     <div style="background: #f8f9fa; padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 1px solid #e9ecef;">
                         <h4 style="margin: 0 0 10px 0; color: #2c3e50; font-size: 1.1em;">📄 Page analysée</h4>
-                        <div style="font-weight: 500; margin-bottom: 8px; line-height: 1.4;">${this.analysisResults.title}</div>
-                        <div style="color: #666; font-size: 0.9em; word-break: break-all; margin-bottom: 8px;">${this.analysisResults.url}</div>
+                        <div style="font-weight: 500; margin-bottom: 8px; line-height: 1.4;" data-dima-placeholder="page-title"></div>
+                        <div style="color: #666; font-size: 0.9em; word-break: break-all; margin-bottom: 8px;" data-dima-placeholder="page-url"></div>
                         <div style="color: #888; font-size: 0.85em;">
                             Analysé le ${new Date(this.analysisResults.timestamp).toLocaleString('fr-FR')} • 
                             ${this.analysisResults.analyzedText} caractères traités • Type: ${this.pageType}
@@ -735,11 +899,25 @@ ${techniques.map(t => `• ${t.nom}`).join('\n')}`;
                 </div>
             `;
 
+            // Injection sûre des valeurs page-controlled / DB-controlled
+            // via textContent (jamais innerHTML) — évite tout XSS.
+            const setPlaceholder = (key, value) => {
+                const el = modal.querySelector(`[data-dima-placeholder="${key}"]`);
+                if (el) el.textContent = value == null ? '' : String(value);
+            };
+            setPlaceholder('page-title', this.analysisResults.title);
+            setPlaceholder('page-url', this.analysisResults.url);
+            if (this.suspiciousSiteCheck.isSuspicious) {
+                const { riskConfig } = this.suspiciousSiteCheck;
+                setPlaceholder('suspicious-icon', riskConfig.icon || '⚠️');
+                setPlaceholder('suspicious-label', riskConfig.label || '');
+                setPlaceholder('suspicious-message', riskConfig.message || '');
+            }
+
             modal.addEventListener('click', (e) => {
                 if (e.target === modal) modal.remove();
             });
-            
-            // Ajouter l'événement pour le bouton des détails du site suspect
+
             modal.querySelector('.suspicious-details-btn')?.addEventListener('click', () => {
                 this.showSuspiciousSiteDetails();
             });
