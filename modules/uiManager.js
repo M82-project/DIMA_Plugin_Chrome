@@ -127,7 +127,7 @@ class UIManager {
         alert.id = 'dima-suspicious-alert';
 
         const row = document.createElement('div');
-        row.style.cssText = 'display: flex; align-items: start; gap: 12px;';
+        row.style.cssText = 'display: flex; align-items: flex-start; gap: 12px;';
 
         const iconSpan = document.createElement('span');
         iconSpan.style.fontSize = '24px';
@@ -202,7 +202,7 @@ class UIManager {
             font-family: 'Segoe UI', Arial, sans-serif !important;
             box-shadow: 0 6px 20px rgba(0,0,0,0.3) !important;
             border: 2px solid rgba(255,255,255,0.2) !important;
-            animation: slideInRight 0.4s ease-out !important;
+            animation: dimaSlideInRight 0.4s ease-out !important;
             backdrop-filter: blur(10px) !important;
         `;
         
@@ -257,13 +257,13 @@ class UIManager {
             align-items: center !important;
             justify-content: center !important;
             font-family: 'Segoe UI', Arial, sans-serif !important;
-            animation: fadeIn 0.3s ease-out !important;
+            animation: dimaFadeIn 0.3s ease-out !important;
         `;
 
         const logoUrl = _extensionAPI.runtime.getURL('M82-logo-16.png');
 
         const card = document.createElement('div');
-        card.style.cssText = 'background: white; padding: 30px; border-radius: 20px; max-width: 600px; max-height: 90vh; overflow-y: auto; margin: 20px; box-shadow: 0 25px 50px rgba(0,0,0,0.3); animation: slideIn 0.3s ease-out;';
+        card.style.cssText = 'background: white; padding: 30px; border-radius: 20px; max-width: 600px; max-height: 90vh; overflow-y: auto; margin: 20px; box-shadow: 0 25px 50px rgba(0,0,0,0.3); animation: dimaSlideIn 0.3s ease-out;';
 
         // En-tête
         const header = document.createElement('div');
@@ -592,7 +592,7 @@ ${techniques.map(t => `• ${t.nom}`).join('\n')}`;
                 
                 <!-- Explication contextuelle -->
                 <div style="background: linear-gradient(135deg, #e8f4f8, #d4e8f0); padding: 16px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid ${phaseStats[dominantPhase]?.color || '#3498db'};">
-                    <div style="display: flex; align-items: start; gap: 12px;">
+                    <div style="display: flex; align-items: flex-start; gap: 12px;">
                         <span style="font-size: 24px;">${phaseStats[dominantPhase]?.icon || '💡'}</span>
                         <div>
                             <h4 style="margin: 0 0 8px 0; color: #0c5460; font-size: 1em;">
@@ -749,7 +749,7 @@ ${techniques.map(t => `• ${t.nom}`).join('\n')}`;
                 align-items: center !important;
                 justify-content: center !important;
                 font-family: 'Segoe UI', Arial, sans-serif !important;
-                animation: fadeIn 0.3s ease-out !important;
+                animation: dimaFadeIn 0.3s ease-out !important;
             `;
 
             const logoUrl = _extensionAPI.runtime.getURL('M82-logo-16.png');
@@ -764,7 +764,7 @@ ${techniques.map(t => `• ${t.nom}`).join('\n')}`;
                 suspiciousSafeColor = this.sanitizeHexColor(this.suspiciousSiteCheck.riskConfig.color);
                 suspiciousAlert = `
                     <div style="background: linear-gradient(135deg, ${suspiciousSafeColor}, ${this.adjustColor(suspiciousSafeColor, -15)}); color: white; padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 2px solid rgba(255,255,255,0.2);">
-                        <div style="display: flex; align-items: start; gap: 12px;">
+                        <div style="display: flex; align-items: flex-start; gap: 12px;">
                             <span style="font-size: 28px;" data-dima-placeholder="suspicious-icon"></span>
                             <div style="flex: 1;">
                                 <h3 style="margin: 0 0 8px 0; font-size: 1.2em;" data-dima-placeholder="suspicious-label"></h3>
@@ -811,7 +811,7 @@ ${techniques.map(t => `• ${t.nom}`).join('\n')}`;
                         <div style="display: grid; gap: 12px;">
                             ${this.analysisResults.detectedTechniques.slice(0, 8).map(technique => `
                                 <div style="background: white; padding: 16px; border-radius: 10px; border-left: 4px solid #e67e22; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                                    <div style="display: flex; justify-content: between; align-items: start; margin-bottom: 8px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
                                         <div style="flex: 1;">
                                             <div style="font-weight: bold; color: #2c3e50; margin-bottom: 4px; font-size: 1.05em;">
                                                 ${esc(phaseIcon(technique.phase))} ${esc(technique.index)}: ${esc(technique.nom)}
@@ -824,7 +824,7 @@ ${techniques.map(t => `• ${t.nom}`).join('\n')}`;
                                         </span>
                                     </div>
 
-                                    <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 8px;">
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
                                         <span style="background: #e67e22; color: white; padding: 3px 8px; border-radius: 6px; font-size: 0.8em; font-weight: 500;">
                                             ${esc(technique.phase)}
                                         </span>
@@ -858,7 +858,7 @@ ${techniques.map(t => `• ${t.nom}`).join('\n')}`;
                 `;
 
             modal.innerHTML = `
-                <div style="background: white; padding: 30px; border-radius: 20px; max-width: 900px; max-height: 90vh; overflow-y: auto; margin: 20px; box-shadow: 0 25px 50px rgba(0,0,0,0.3); animation: slideIn 0.3s ease-out;">
+                <div style="background: white; padding: 30px; border-radius: 20px; max-width: 900px; max-height: 90vh; overflow-y: auto; margin: 20px; box-shadow: 0 25px 50px rgba(0,0,0,0.3); animation: dimaSlideIn 0.3s ease-out;">
 
                     <!-- En-tête -->
                     <div style="text-align: center; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 2px solid #f0f0f0;">

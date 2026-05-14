@@ -263,11 +263,14 @@ class ContentExtractor {
     if (
       matchWord(hostname, "news") ||
       matchWord(pathAndQuery, "news") ||
-      matchWord(pathAndQuery, "article") ||
+      // matchStem accepte les pluriels et dérivés:
+      // `/articles/foo` et `/blogs/foo` sont des segments très courants
+      // qu'un matchWord strict aurait classés en "general".
+      matchStem(pathAndQuery, "article") ||
       matchStem(pathAndQuery, "actualit")
     ) return "news";
 
-    if (matchWord(hostname, "blog") || matchWord(pathAndQuery, "blog")) return "blog";
+    if (matchStem(hostname, "blog") || matchStem(pathAndQuery, "blog")) return "blog";
 
     if (
       matchStem(hostname, "shop") ||

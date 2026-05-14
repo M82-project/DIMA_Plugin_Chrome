@@ -105,27 +105,30 @@ class DIMAAnalyzer {
 // CSS pour les animations (tous les @keyframes utilisés par l'extension
 // sont définis ici une seule fois pour qu'ils soient disponibles avant
 // l'apparition du bouton, de l'alerte de site suspect ou du modal).
+// Tous les noms sont préfixés `dima*` car @keyframes partage un namespace
+// global avec la page hôte; des noms génériques (fadeIn, slideIn) auraient
+// pu écraser ou être écrasés par les animations existantes du site visité.
 const style = document.createElement("style");
 style.textContent = `
-    @keyframes dimaFadeIn {
+    @keyframes dimaFadeInScale {
         from { opacity: 0; transform: scale(0.9); }
         to { opacity: 1; transform: scale(1); }
     }
-    @keyframes fadeIn {
+    @keyframes dimaFadeIn {
         from { opacity: 0; }
         to { opacity: 1; }
     }
-    @keyframes slideIn {
+    @keyframes dimaSlideIn {
         from { transform: translateY(30px); opacity: 0; }
         to { transform: translateY(0); opacity: 1; }
     }
-    @keyframes slideInRight {
+    @keyframes dimaSlideInRight {
         from { transform: translateX(100%); opacity: 0; }
         to { transform: translateX(0); opacity: 1; }
     }
 
     #dima-btn {
-        animation: dimaFadeIn 0.5s ease-out;
+        animation: dimaFadeInScale 0.5s ease-out;
     }
 `;
 document.head.appendChild(style);
