@@ -156,10 +156,25 @@ class ContentExtractor {
       "data-google-query-id", "data-adsbygoogle-status", "data-ad-client",
     ];
 
+    if (!this.skipPatternCache) {
+      this.skipPatternCache = new Map();
+    }
+
+    const getSkipPattern = (skip) => {
+      if (!this.skipPatternCache.has(skip)) {
+        const escapedSkip = skip.replace(/[\\^$.*+?()[\]{}|]/g, "\\$&");
+        this.skipPatternCache.set(
+          skip,
+          new RegExp(`(^|[-_])${escapedSkip}([-_]|$)`)
+        );
+      }
+
+      return this.skipPatternCache.get(skip);
+    };
+
     const matchesSkipPattern = (value, skip) => {
       if (!value) return false;
-      const escapedSkip = skip.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-      return new RegExp(`(^|[-_])${escapedSkip}([-_]|$)`).test(value);
+      return getSkipPattern(skip).test(value);
     };
 
     const classTokens = Array.from(element.classList || [], (token) =>
