@@ -102,14 +102,28 @@ class DIMAAnalyzer {
 
 // ===== INITIALISATION ET STYLES =====
 
-// CSS pour les animations
+// CSS pour les animations (tous les @keyframes utilisés par l'extension
+// sont définis ici une seule fois pour qu'ils soient disponibles avant
+// l'apparition du bouton, de l'alerte de site suspect ou du modal).
 const style = document.createElement("style");
 style.textContent = `
     @keyframes dimaFadeIn {
         from { opacity: 0; transform: scale(0.9); }
         to { opacity: 1; transform: scale(1); }
     }
-    
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    @keyframes slideIn {
+        from { transform: translateY(30px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes slideInRight {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+
     #dima-btn {
         animation: dimaFadeIn 0.5s ease-out;
     }
@@ -119,7 +133,11 @@ document.head.appendChild(style);
 // Initialisation sécurisée avec gestion d'erreurs améliorée
 console.log("DIMA: Script chargé - Version complète avec mots-clés améliorés");
 
-// Vérifier que toutes les dépendances sont chargées
+// Vérifier que toutes les dépendances sont chargées.
+// suspiciousSitesManager s'initialise via un setTimeout dans son module,
+// donc on l'attend ici aussi pour éviter une race où le bouton est créé
+// avant que la base de sites suspects soit prête (l'alerte ne s'affichait
+// alors pas sur la toute première page consultée).
 function checkDependencies() {
   return (
     window.DIMA_TECHNIQUES &&
@@ -127,7 +145,8 @@ function checkDependencies() {
     window.CONTEXT_PATTERNS &&
     window.ContentExtractor &&
     window.TechniqueAnalyzer &&
-    window.UIManager
+    window.UIManager &&
+    typeof window.checkSuspiciousSite === "function"
   );
 }
 

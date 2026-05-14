@@ -53,7 +53,7 @@ const DIMA_ENHANCED_KEYWORDS = {
     patterns: [
       /\d+\s+(?:choses|façons|méthodes|secrets|things|ways|methods)\s+(?:que|pour|de|to|that)/i,
       /(?:voici|découvrez|here's|discover)\s+(?:comment|pourquoi|ce que|how|why|what)/i,
-      /(?:cette|cette|this)\s+\w+\s+va\s+vous\s+(?:\w+|will)/i,
+      /(?:cette|this)\s+\w+\s+va\s+vous\s+(?:\w+|will)/i,
       /(?:shocking|amazing|incredible)\s+(?:secret|truth|fact)/i,
     ],
   },
