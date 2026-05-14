@@ -1,7 +1,8 @@
-This PR refactors suspicious-site alert/detail UI creation in UIManager to use DOM APIs instead of large HTML strings, while improving color sanitization, link handling, and accessibility/focus behavior.
+For suspicious-site alerts and detail views in UIManager, prefer building UI with DOM APIs such as `document.createElement` and assigning user-visible content with `textContent` instead of assembling large HTML strings.
 
-Changes:
+Project guidance:
 
-Replaces suspicious-site alert and details modal HTML string construction with document.createElement/textContent.
-Adds safe hex color validation and HTTP(S) report URL validation.
-Updates suspicious alert rendering inside the main modal to use placeholders populated via textContent.
+Validate color inputs before applying them, and only allow safe hex color values.
+Validate report links before rendering them, and only allow HTTP(S) URLs.
+Preserve accessibility and focus behavior when rendering alerts and modal content.
+Use placeholder elements populated through DOM property assignment for dynamic content inside modal UIs.
