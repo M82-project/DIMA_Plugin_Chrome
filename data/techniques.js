@@ -635,7 +635,7 @@ const DIMA_TECHNIQUES = [
   {
     index: "TE0222",
     nom: "Biais de confirmation",
-    phase: "Inform",
+    phase: "Informer",
     description: "Le biais de confirmation, également dénommé biais de confirmation d'hypothèse, est un mécanisme cognitif qui consiste à privilégier les informations confirmant ses idées préconçues ou ses hypothèses, ",
     mots_cles: ["confirme", "validation", "comme prévu", "tel qu'attendu", "logique", "confirms", "as expected", "as predicted", "logical"],
     weight: 1.4,
@@ -676,7 +676,7 @@ const DIMA_TECHNIQUES = [
  {
     index: "TE0241",
     nom: "Biais de la somme nulle",
-    phase: "Inform",
+    phase: "Informer",
     description: "Le biais de la somme nulle est un biais cognitif associé à la pensée à somme nulle ; c'est la tendance des gens à juger intuitivement qu'une situation est à somme nulle, même si ce n'est pas le cas. C",
     mots_cles: ["gagnant-perdant", "somme nulle", "gain", "perte", "zéro", "winner-loser", "zero-sum", "gain", "loss", "zero"],
     weight: 1.2,
@@ -686,7 +686,7 @@ const DIMA_TECHNIQUES = [
     {
     index: "TE0242",
     nom: "Biais de normalité",
-    phase: "Inform",
+    phase: "Informer",
     description: "Le biais de normalité est un biais cognitif qui conduit les individus à sous-estimer, minimiser voire nier la probabilité, la gravité ou la réalité d'un événement inhabituel, extrême ou catastrophique",
     mots_cles: ["normal", "habituel", "comme d'habitude", "business as usual", "stable", "usual", "as usual"],
     weight: 1.2,
@@ -995,7 +995,7 @@ const DIMA_TECHNIQUES = [
   {
     index: "TA0041",
     nom: "Valorisation individuelle",
-    phase: "Act",
+    phase: "Agir",
     description: "Mise en avant des bénéfices personnels pour motiver l'action",
     mots_cles: [
       "vous bénéficiez",
@@ -1014,7 +1014,7 @@ const DIMA_TECHNIQUES = [
   {
     index: "TA0042",
     nom: "Renforcement escalatoire",
-    phase: "Act",
+    phase: "Agir",
     description: "Augmentation progressive de l'engagement demandé",
     mots_cles: [
       "progressivement",
@@ -1031,7 +1031,7 @@ const DIMA_TECHNIQUES = [
   {
     index: "TA0043",
     nom: "Ozaekomi waza (contrôle par immobilisation)",
-    phase: "Act",
+    phase: "Agir",
     description: "Blocage des alternatives pour forcer une décision",
     mots_cles: [
       "seule option",
@@ -1051,7 +1051,7 @@ const DIMA_TECHNIQUES = [
   {
     index: "TE0411",
     nom: "Excès de confiance",
-    phase: "Act",
+    phase: "Agir",
     description: "Surestimation de ses propres capacités ou connaissances",
     mots_cles: [
       "confiant",
@@ -1073,7 +1073,7 @@ const DIMA_TECHNIQUES = [
   {
     index: "TE0412",
     nom: "Effet Peltzman (compensation du risque)",
-    phase: "Act",
+    phase: "Agir",
     description: "Compensation du risque par comportement plus risqué",
     mots_cles: [
       "sécurisé", "secure", "protégé", "protected", "sans danger", "safe",
@@ -1086,7 +1086,7 @@ const DIMA_TECHNIQUES = [
   {
     index: "TE0413",
     nom: "Supériorité illusoire",
-    phase: "Act",
+    phase: "Agir",
     description: "Conviction d'être meilleur que la moyenne",
     mots_cles: [
       "meilleur que", "better than", "supérieur à", "superior to",
@@ -1099,7 +1099,7 @@ const DIMA_TECHNIQUES = [
   {
     index: "TE0414",
     nom: "FOMO",
-    phase: "Act",
+    phase: "Agir",
     description: "Peur de rater une opportunité",
     mots_cles: [
       "ne ratez pas", "don't miss", "dernière chance", "last chance", "limité",
@@ -1113,7 +1113,7 @@ const DIMA_TECHNIQUES = [
   {
   index: "TE0421",
   nom: "Biais des coûts irrécupérables",
-  phase: "Act",
+  phase: "Agir",
   description: "Tendance à continuer une activité en raison des ressources déjà investies, même si l'abandon serait plus rationnel (Sunk cost fallacy)",
   mots_cles: [
     // Investissement passé
@@ -1173,7 +1173,7 @@ const DIMA_TECHNIQUES = [
   {
     index: "TE0422",
     nom: "Biais d'autorité",
-    phase: "Act",
+    phase: "Agir",
     description: "Influence excessive des figures d'autorité",
     mots_cles: [
       "autorité",
@@ -1194,7 +1194,7 @@ const DIMA_TECHNIQUES = [
   {
     index: "TE0423",
     nom: "Biais de la preuve sociale artificielle",
-    phase: "Act",
+    phase: "Agir",
     description: "Création d'une illusion de consensus",
     mots_cles: [
       "millions de personnes", "millions of people", "tout le monde utilise",
@@ -1208,7 +1208,7 @@ const DIMA_TECHNIQUES = [
 {
     index: "TE0424",
     nom: "Biais de rareté",
-    phase: "Act",
+    phase: "Agir",
     description: "Valorisation accrue d'une opportunité ou d'un objet perçu comme rare, limité ou difficile à obtenir (Scarcity bias)",
     mots_cles: [
       // Expressions directes de rareté
@@ -1221,7 +1221,7 @@ const DIMA_TECHNIQUES = [
       "stock limité", "limited stock", "quantité limitée", "limited quantity",
       "places limitées", "limited seats", "dernières pièces", "last pieces",
       "derniers exemplaires", "last copies", "plus que", "only",
-      "seulement", "just", "il ne reste que", "only left",
+      "seulement", "juste", "il ne reste que", "only left",
       
       // Éditions spéciales
       "édition limitée", "limited edition", "série limitée", "limited series",
@@ -1262,7 +1262,7 @@ const DIMA_TECHNIQUES = [
   {
     index: "TE0425",
     nom: "Pied dans la porte",
-    phase: "Act",
+    phase: "Agir",
     description: "Obtenir d'abord un petit engagement initial peu coûteux pour faciliter ensuite l'acceptation d'une demande plus importante (Foot-in-the-door technique, Freedman & Fraser, 1966)",
     mots_cles: [
       // Engagement initial
@@ -1317,7 +1317,7 @@ const DIMA_TECHNIQUES = [
   {
     index: "TE0426",
     nom: "Biais de réciprocité",
-    phase: "Act",
+    phase: "Agir",
     description: "Sentiment d'obligation de rendre une faveur, un cadeau ou un service reçu, même non sollicité (Principe de réciprocité, Cialdini)",
     mots_cles: [
       // Obligation de retour
@@ -1379,7 +1379,7 @@ const DIMA_TECHNIQUES = [
   {
     index: "TE0431",
     nom: "Biais d'omission",
-    phase: "Act",
+    phase: "Agir",
     description: "Préférence pour l'inaction même si dommageable",
     mots_cles: [
       "ne rien faire", "do nothing", "laisser faire", "let it be", "inaction",
@@ -1392,7 +1392,7 @@ const DIMA_TECHNIQUES = [
   {
     index: "TE0432",
     nom: "Biais du statu quo",
-    phase: "Act",
+    phase: "Agir",
     description: "Préférence pour maintenir l'état actuel",
     mots_cles: [
       "rester",
@@ -1415,7 +1415,7 @@ const DIMA_TECHNIQUES = [
   {
     index: "TE0433",
     nom: "Saturation informationnelle",
-    phase: "Act",
+    phase: "Agir",
     description: "Surcharge d'information paralysant la décision",
     mots_cles: [
       "trop d'information", "too much information", "submergé", "overwhelmed",
