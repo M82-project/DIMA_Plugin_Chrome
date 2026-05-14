@@ -219,35 +219,67 @@ class ContentExtractor {
   cleanText(text) {
     if (!text) return "";
 
+    // On préserve toutes les écritures (cyrillique, chinois, arabe, etc.):
+    // \p{L} = lettres tous scripts, \p{N} = chiffres, \p{M} = signes diacritiques.
+    // L'ancienne regex basée sur \w (ASCII) stripait le contenu non latin —
+    // bloquant l'analyse précisément sur les médias que le plugin cible.
     return text
-      .replace(/\s+/g, " ")
       .replace(/[\r\n\t]/g, " ")
-      .replace(/[^\w\s\.,!?;:()\-'"%àâäéèêëïîôöùûüÿç]/gi, "")
+      .replace(/[^\p{L}\p{N}\p{M}\s\.,!?;:()\-'"%]/gu, "")
+      .replace(/\s+/g, " ")
       .trim();
   }
 
   detectPageType() {
-    const url = window.location.href.toLowerCase();
+    // On distingue le hostname du reste de l'URL pour éviter que des
+    // sous-chaînes comme "news" matchent dans une querystring quelconque,
+    // et on utilise des frontières non alphanumériques pour distinguer
+    // "news.example.com" de "businessnews.example.com".
+    let hostname = "";
+    let pathAndQuery = "";
+    try {
+      const u = new URL(window.location.href);
+      hostname = u.hostname.toLowerCase();
+      pathAndQuery = (u.pathname + u.search).toLowerCase();
+    } catch (_) {
+      const url = window.location.href.toLowerCase();
+      hostname = url;
+      pathAndQuery = url;
+    }
+
+    // matchWord exige une frontière complète (ex: `news` ne matche pas
+    // `businessnews`); matchStem n'exige qu'une frontière de début pour
+    // accepter les pluriels / dérivés (`product` → `products`, `shop` → `shopping`).
+    const matchWord = (haystack, word) =>
+      new RegExp(`(^|[^a-z0-9])${word}([^a-z0-9]|$)`).test(haystack);
+    const matchStem = (haystack, stem) =>
+      new RegExp(`(^|[^a-z0-9])${stem}`).test(haystack);
+
+    // Réseaux sociaux : on cible le hostname pour éviter qu'un article
+    // mentionnant "facebook" dans l'URL d'un autre média soit classé "social".
+    const socialHosts = ["facebook.com", "twitter.com", "x.com", "instagram.com", "t.me", "telegram.me", "tiktok.com", "vk.com"];
+    if (socialHosts.some((h) => hostname === h || hostname.endsWith("." + h))) return "social";
+
     if (
-      url.includes("news") ||
-      url.includes("article") ||
-      url.includes("actualit")
-    )
-      return "news";
-    if (url.includes("blog")) return "blog";
+      matchWord(hostname, "news") ||
+      matchWord(pathAndQuery, "news") ||
+      // matchStem accepte les pluriels et dérivés:
+      // `/articles/foo` et `/blogs/foo` sont des segments très courants
+      // qu'un matchWord strict aurait classés en "general".
+      matchStem(pathAndQuery, "article") ||
+      matchStem(pathAndQuery, "actualit")
+    ) return "news";
+
+    if (matchStem(hostname, "blog") || matchStem(pathAndQuery, "blog")) return "blog";
+
     if (
-      url.includes("facebook") ||
-      url.includes("twitter") ||
-      url.includes("instagram")
-    )
-      return "social";
-    if (
-      url.includes("shop") ||
-      url.includes("buy") ||
-      url.includes("product") ||
-      url.includes("commerce")
-    )
-      return "commerce";
+      matchStem(hostname, "shop") ||
+      matchStem(pathAndQuery, "shop") ||
+      matchStem(pathAndQuery, "product") ||
+      matchWord(pathAndQuery, "commerce") ||
+      matchWord(pathAndQuery, "buy")
+    ) return "commerce";
+
     return "general";
   }
 }

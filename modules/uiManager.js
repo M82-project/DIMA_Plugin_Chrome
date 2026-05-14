@@ -28,42 +28,72 @@ class UIManager {
     if (analysisResults) {
       this.analysisResults = analysisResults;
     }
-    
+
     if (!this.analysisResults) {
       console.error('DIMA: Aucun résultat d\'analyse disponible pour créer le bouton');
       return;
     }
 
     // Vérifier si le site est suspect
-    this.suspiciousSiteCheck = window.checkSuspiciousSite ? 
-                                window.checkSuspiciousSite(window.location.href) : 
+    this.suspiciousSiteCheck = window.checkSuspiciousSite ?
+                                window.checkSuspiciousSite(window.location.href) :
                                 { isSuspicious: false };
-        
+
         try {
             // Supprimer bouton existant
             document.getElementById('dima-btn')?.remove();
             document.getElementById('dima-suspicious-alert')?.remove();
 
-            if (this.buttonCreated) return;
+            // Couleur du bouton: blindée pour éviter qu'une valeur invalide
+            // ne produise un gradient cassé via adjustColor.
+            const safeRiskColor = this.sanitizeHexColor(this.analysisResults.riskColor);
 
-            // Créer le bouton principal
+            // Créer le bouton principal (construction DOM-safe: jamais d'innerHTML
+            // sur des valeurs dérivées des résultats d'analyse).
+            //
+            // Accessibilité: c'est un <div> (pas un <button>) pour conserver le
+            // style "pilule" sans avoir à neutraliser les styles natifs des
+            // boutons. On ajoute donc explicitement role=button + tabindex=0
+            // pour la navigation clavier, un libellé ARIA lisible, et un
+            // handler keydown qui réagit à Enter et Espace (sémantique
+            // équivalente à <button>).
             const button = document.createElement('div');
             button.id = 'dima-btn';
-            
-            button.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    🧠 
-                    <span style="font-weight: bold;">${this.analysisResults.globalScore}</span>
-                    <span style="font-size: 0.8em; opacity: 0.9;">${this.analysisResults.riskLevel}</span>
-                </div>
-            `;
-            
+            button.setAttribute('role', 'button');
+            button.setAttribute('tabindex', '0');
+            const score = String(this.analysisResults.globalScore ?? '');
+            const level = String(this.analysisResults.riskLevel ?? '');
+            button.setAttribute(
+                'aria-label',
+                `DIMA: score de manipulation ${score}, niveau ${level}. Activer pour ouvrir le rapport détaillé.`
+            );
+
+            const inner = document.createElement('div');
+            inner.style.cssText = 'display: flex; align-items: center; gap: 8px;';
+
+            const brain = document.createElement('span');
+            brain.textContent = '🧠';
+            brain.setAttribute('aria-hidden', 'true');
+
+            const scoreSpan = document.createElement('span');
+            scoreSpan.style.fontWeight = 'bold';
+            scoreSpan.textContent = score;
+
+            const levelSpan = document.createElement('span');
+            levelSpan.style.cssText = 'font-size: 0.8em; opacity: 0.9;';
+            levelSpan.textContent = level;
+
+            inner.appendChild(brain);
+            inner.appendChild(scoreSpan);
+            inner.appendChild(levelSpan);
+            button.appendChild(inner);
+
             button.style.cssText = `
                 position: fixed !important;
                 top: 20px !important;
                 right: 20px !important;
                 z-index: 999999999 !important;
-                background: linear-gradient(135deg, ${this.analysisResults.riskColor}, ${this.adjustColor(this.analysisResults.riskColor, -20)}) !important;
+                background: linear-gradient(135deg, ${safeRiskColor}, ${this.adjustColor(safeRiskColor, -20)}) !important;
                 color: white !important;
                 padding: 12px 16px !important;
                 border-radius: 25px !important;
@@ -81,6 +111,15 @@ class UIManager {
             
             // Événements
             button.addEventListener('click', () => this.showModal());
+            // Sémantique <button> au clavier: Enter et Espace activent.
+            // preventDefault sur Espace évite que la page hôte ne scrolle
+            // quand le badge a le focus.
+            button.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                    e.preventDefault();
+                    this.showModal();
+                }
+            });
             button.addEventListener('mouseenter', () => {
                 button.style.transform = 'scale(1.05) translateY(-2px)';
                 button.style.boxShadow = '0 6px 20px rgba(0,0,0,0.3), 0 4px 8px rgba(0,0,0,0.2)';
@@ -88,6 +127,16 @@ class UIManager {
             button.addEventListener('mouseleave', () => {
                 button.style.transform = 'scale(1) translateY(0)';
                 button.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2), 0 2px 5px rgba(0,0,0,0.1)';
+            });
+            // Indicateur visuel de focus clavier (le user-agent ne stylise
+            // pas les <div role=button> par défaut).
+            button.addEventListener('focus', () => {
+                button.style.outline = '2px solid #ffffff';
+                button.style.outlineOffset = '2px';
+            });
+            button.addEventListener('blur', () => {
+                button.style.outline = '';
+                button.style.outlineOffset = '';
             });
 
             document.body?.appendChild(button);
@@ -113,7 +162,7 @@ class UIManager {
         alert.id = 'dima-suspicious-alert';
 
         const row = document.createElement('div');
-        row.style.cssText = 'display: flex; align-items: start; gap: 12px;';
+        row.style.cssText = 'display: flex; align-items: flex-start; gap: 12px;';
 
         const iconSpan = document.createElement('span');
         iconSpan.style.fontSize = '24px';
@@ -188,7 +237,7 @@ class UIManager {
             font-family: 'Segoe UI', Arial, sans-serif !important;
             box-shadow: 0 6px 20px rgba(0,0,0,0.3) !important;
             border: 2px solid rgba(255,255,255,0.2) !important;
-            animation: slideInRight 0.4s ease-out !important;
+            animation: dimaSlideInRight 0.4s ease-out !important;
             backdrop-filter: blur(10px) !important;
         `;
         
@@ -243,13 +292,13 @@ class UIManager {
             align-items: center !important;
             justify-content: center !important;
             font-family: 'Segoe UI', Arial, sans-serif !important;
-            animation: fadeIn 0.3s ease-out !important;
+            animation: dimaFadeIn 0.3s ease-out !important;
         `;
 
         const logoUrl = _extensionAPI.runtime.getURL('M82-logo-16.png');
 
         const card = document.createElement('div');
-        card.style.cssText = 'background: white; padding: 30px; border-radius: 20px; max-width: 600px; max-height: 90vh; overflow-y: auto; margin: 20px; box-shadow: 0 25px 50px rgba(0,0,0,0.3); animation: slideIn 0.3s ease-out;';
+        card.style.cssText = 'background: white; padding: 30px; border-radius: 20px; max-width: 600px; max-height: 90vh; overflow-y: auto; margin: 20px; box-shadow: 0 25px 50px rgba(0,0,0,0.3); animation: dimaSlideIn 0.3s ease-out;';
 
         // En-tête
         const header = document.createElement('div');
@@ -474,6 +523,21 @@ class UIManager {
         return /^#[0-9a-fA-F]{6}$/.test(color) ? color : fallback;
     }
 
+    // Échappe une chaîne pour insertion sûre dans un fragment HTML.
+    // Utilisé pour les valeurs dérivées des bases de données (technique.nom,
+    // .index, .description, .tactic, matchedKeywords[].keyword) qui sont
+    // contrôlées par les contributeurs des bases mais ne sont pas garanties
+    // exemptes de caractères HTML; même remarque pour les valeurs page-controlled.
+    escapeHtml(value) {
+        if (value == null) return '';
+        return String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
     isSafeHttpUrl(url) {
         if (typeof url !== 'string' || !/^https?:\/\//i.test(url)) {
             return false;
@@ -563,7 +627,7 @@ ${techniques.map(t => `• ${t.nom}`).join('\n')}`;
                 
                 <!-- Explication contextuelle -->
                 <div style="background: linear-gradient(135deg, #e8f4f8, #d4e8f0); padding: 16px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid ${phaseStats[dominantPhase]?.color || '#3498db'};">
-                    <div style="display: flex; align-items: start; gap: 12px;">
+                    <div style="display: flex; align-items: flex-start; gap: 12px;">
                         <span style="font-size: 24px;">${phaseStats[dominantPhase]?.icon || '💡'}</span>
                         <div>
                             <h4 style="margin: 0 0 8px 0; color: #0c5460; font-size: 1em;">
@@ -720,7 +784,7 @@ ${techniques.map(t => `• ${t.nom}`).join('\n')}`;
                 align-items: center !important;
                 justify-content: center !important;
                 font-family: 'Segoe UI', Arial, sans-serif !important;
-                animation: fadeIn 0.3s ease-out !important;
+                animation: dimaFadeIn 0.3s ease-out !important;
             `;
 
             const logoUrl = _extensionAPI.runtime.getURL('M82-logo-16.png');
@@ -735,7 +799,7 @@ ${techniques.map(t => `• ${t.nom}`).join('\n')}`;
                 suspiciousSafeColor = this.sanitizeHexColor(this.suspiciousSiteCheck.riskConfig.color);
                 suspiciousAlert = `
                     <div style="background: linear-gradient(135deg, ${suspiciousSafeColor}, ${this.adjustColor(suspiciousSafeColor, -15)}); color: white; padding: 20px; border-radius: 12px; margin-bottom: 25px; border: 2px solid rgba(255,255,255,0.2);">
-                        <div style="display: flex; align-items: start; gap: 12px;">
+                        <div style="display: flex; align-items: flex-start; gap: 12px;">
                             <span style="font-size: 28px;" data-dima-placeholder="suspicious-icon"></span>
                             <div style="flex: 1;">
                                 <h3 style="margin: 0 0 8px 0; font-size: 1.2em;" data-dima-placeholder="suspicious-label"></h3>
@@ -751,43 +815,120 @@ ${techniques.map(t => `• ${t.nom}`).join('\n')}`;
                 `;
             }
             
+            // Note: Toutes les valeurs dérivées de l'analyse (technique.*,
+            // matchedKeywords, page title/url) sont injectées via this.escapeHtml()
+            // pour éviter qu'un caractère HTML dans une base de données ne casse
+            // le rendu ou n'introduise un vecteur XSS. Les onclick/onerror inline
+            // ont été remplacés par des addEventListener (CSP-safe).
+            const esc = (v) => this.escapeHtml(v);
+            const phaseIcon = (phase) => {
+                switch (phase) {
+                    case 'Detect': return '👁️';
+                    case 'Informer': return '📢';
+                    case 'Mémoriser': return '🧠';
+                    case 'Agir': return '⚡';
+                    default: return '•';
+                }
+            };
+
+            const safeRiskColor = this.sanitizeHexColor(this.analysisResults.riskColor);
+            const detectedHtml = this.analysisResults.detectedTechniques.length === 0
+                ? `
+                    <div style="background: linear-gradient(135deg, #d4edda, #c3e6cb); color: #155724; padding: 25px; border-radius: 12px; text-align: center; border: 1px solid #c3e6cb;">
+                        <div style="font-size: 2em; margin-bottom: 10px;">✅</div>
+                        <div style="font-size: 1.2em; font-weight: bold; margin-bottom: 8px;">Aucune manipulation détectée</div>
+                        <div style="font-size: 0.95em; opacity: 0.8;">Le contenu analysé semble exempt de techniques de manipulation cognitive manifestes</div>
+                    </div>
+                `
+                : `
+                    <div style="background: linear-gradient(135deg, #fff3cd, #ffeaa7); padding: 20px; border-radius: 12px; border: 1px solid #ffeaa7;">
+                        <h4 style="margin: 0 0 20px 0; color: #856404; font-size: 1.2em;">⚠️ Techniques de manipulation détectées</h4>
+                        <div style="display: grid; gap: 12px;">
+                            ${this.analysisResults.detectedTechniques.slice(0, 8).map(technique => `
+                                <div style="background: white; padding: 16px; border-radius: 10px; border-left: 4px solid #e67e22; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
+                                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px;">
+                                        <div style="flex: 1;">
+                                            <div style="font-weight: bold; color: #2c3e50; margin-bottom: 4px; font-size: 1.05em;">
+                                                ${esc(phaseIcon(technique.phase))} ${esc(technique.index)}: ${esc(technique.nom)}
+                                            </div>
+                                            ${technique.tactic ? `<div style="font-size: 0.75em; color: #7f8c8d; margin-bottom: 8px;">↳ Tactique: ${esc(technique.tactic)}</div>` : ''}
+                                            ${technique.description ? `<div style="color: #666; font-size: 0.9em; margin-bottom: 8px; line-height: 1.4;">${esc(technique.description)}</div>` : ''}
+                                        </div>
+                                        <span style="background: #27ae60; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.8em; font-weight: bold; margin-left: 15px;">
+                                            ${esc(technique.confidence)}%
+                                        </span>
+                                    </div>
+
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                                        <span style="background: #e67e22; color: white; padding: 3px 8px; border-radius: 6px; font-size: 0.8em; font-weight: 500;">
+                                            ${esc(technique.phase)}
+                                        </span>
+                                        <div style="text-align: right; font-size: 0.75em; color: #7f8c8d;">
+                                            <div>Score pondéré: ${esc(technique.weightedScore?.toFixed(1) ?? technique.score)}</div>
+                                        </div>
+                                    </div>
+
+                                    ${technique.matchedKeywords?.length > 0 ? `
+                                        <div style="margin-top: 10px;">
+                                            <div style="font-size: 0.85em; color: #666; margin-bottom: 6px; font-weight: 500;">
+                                                🔎 Mots-clés détectés:
+                                            </div>
+                                            <div style="display: flex; flex-wrap: wrap; gap: 4px;">
+                                                ${technique.matchedKeywords.slice(0, 4).map(keyword =>
+                                                    `<span style="background: #e9ecef; color: #495057; padding: 2px 6px; border-radius: 4px; font-size: 0.75em;">
+                                                        ${esc(keyword.keyword)} ${(keyword.count > 1) ? `(×${esc(keyword.count)})` : ''}
+                                                    </span>`
+                                                ).join('')}
+                                                ${technique.matchedKeywords.length > 4 ?
+                                                    `<span style="color: #999; font-size: 0.75em; padding: 2px 4px;">+${esc(technique.matchedKeywords.length - 4)} autres...</span>`
+                                                    : ''
+                                                }
+                                            </div>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+
             modal.innerHTML = `
-                <div style="background: white; padding: 30px; border-radius: 20px; max-width: 900px; max-height: 90vh; overflow-y: auto; margin: 20px; box-shadow: 0 25px 50px rgba(0,0,0,0.3); animation: slideIn 0.3s ease-out;">
-                    
+                <div style="background: white; padding: 30px; border-radius: 20px; max-width: 900px; max-height: 90vh; overflow-y: auto; margin: 20px; box-shadow: 0 25px 50px rgba(0,0,0,0.3); animation: dimaSlideIn 0.3s ease-out;">
+
                     <!-- En-tête -->
                     <div style="text-align: center; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 2px solid #f0f0f0;">
                         <div style="display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 10px;">
-                            <img src="${logoUrl}" 
-                                 style="width: 24px; height: 24px;" 
-                                 alt="M82 Project"
-                                 onerror="this.style.display='none'">
+                            <img src="${esc(logoUrl)}"
+                                 id="dima-modal-logo"
+                                 style="width: 24px; height: 24px;"
+                                 alt="M82 Project">
                             <h2 style="color: #2c3e50; margin: 0; font-size: 1.8em;">Analyse DIMA</h2>
                         </div>
                         <p style="color: #7f8c8d; margin: 0; font-size: 0.95em;">
-                            Détection de techniques de manipulation cognitive par 
-                            <a href="https://m82-project.org/" target="_blank" 
+                            Détection de techniques de manipulation cognitive par
+                            <a href="https://m82-project.org/" target="_blank" rel="noopener noreferrer"
                                style="color: #3498db; text-decoration: none; font-weight: 500;">M82 Project</a>
                         </p>
                     </div>
-                    
+
                     ${suspiciousAlert}
-                    
+
                     <!-- Métriques principales -->
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 15px; margin-bottom: 25px;">
-                        <div style="background: linear-gradient(135deg, ${this.analysisResults.riskColor}, ${this.adjustColor(this.analysisResults.riskColor, -15)}); color: white; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-                            <div style="font-size: 2.2em; font-weight: bold; margin-bottom: 5px;">${this.analysisResults.globalScore}</div>
+                        <div style="background: linear-gradient(135deg, ${safeRiskColor}, ${this.adjustColor(safeRiskColor, -15)}); color: white; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                            <div style="font-size: 2.2em; font-weight: bold; margin-bottom: 5px;">${esc(this.analysisResults.globalScore)}</div>
                             <div style="font-size: 0.9em; opacity: 0.9;">Score Global</div>
                         </div>
                         <div style="background: #f8f9fa; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #e9ecef;">
-                            <div style="font-size: 2.2em; font-weight: bold; color: #3498db; margin-bottom: 5px;">${this.analysisResults.detectedTechniques.length}</div>
+                            <div style="font-size: 2.2em; font-weight: bold; color: #3498db; margin-bottom: 5px;">${esc(this.analysisResults.detectedTechniques.length)}</div>
                             <div style="color: #7f8c8d; font-size: 0.9em;">Techniques</div>
                         </div>
                         <div style="background: #f8f9fa; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #e9ecef;">
-                            <div style="font-size: 1.4em; font-weight: bold; color: ${this.analysisResults.riskColor}; margin-bottom: 5px;">${this.analysisResults.riskLevel}</div>
+                            <div style="font-size: 1.4em; font-weight: bold; color: ${safeRiskColor}; margin-bottom: 5px;">${esc(this.analysisResults.riskLevel)}</div>
                             <div style="color: #7f8c8d; font-size: 0.9em;">Niveau Risque</div>
                         </div>
                         <div style="background: #f8f9fa; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #e9ecef;">
-                            <div style="font-size: 1.6em; font-weight: bold; color: #17a2b8; margin-bottom: 5px;">${this.analysisResults.contentLength}</div>
+                            <div style="font-size: 1.6em; font-weight: bold; color: #17a2b8; margin-bottom: 5px;">${esc(this.analysisResults.contentLength)}</div>
                             <div style="color: #7f8c8d; font-size: 0.9em;">Caractères</div>
                         </div>
                     </div>
@@ -800,78 +941,21 @@ ${techniques.map(t => `• ${t.nom}`).join('\n')}`;
                         <div style="font-weight: 500; margin-bottom: 8px; line-height: 1.4;" data-dima-placeholder="page-title"></div>
                         <div style="color: #666; font-size: 0.9em; word-break: break-all; margin-bottom: 8px;" data-dima-placeholder="page-url"></div>
                         <div style="color: #888; font-size: 0.85em;">
-                            Analysé le ${new Date(this.analysisResults.timestamp).toLocaleString('fr-FR')} • 
-                            ${this.analysisResults.analyzedText} caractères traités • Type: ${this.pageType}
+                            Analysé le ${esc(new Date(this.analysisResults.timestamp).toLocaleString('fr-FR'))} •
+                            ${esc(this.analysisResults.analyzedText)} caractères traités • Type: ${esc(this.pageType)}
                         </div>
                     </div>
 
-                    <!-- Message si aucune technique -->
-                    ${this.analysisResults.detectedTechniques.length === 0 ? `
-                        <div style="background: linear-gradient(135deg, #d4edda, #c3e6cb); color: #155724; padding: 25px; border-radius: 12px; text-align: center; border: 1px solid #c3e6cb;">
-                            <div style="font-size: 2em; margin-bottom: 10px;">✅</div>
-                            <div style="font-size: 1.2em; font-weight: bold; margin-bottom: 8px;">Aucune manipulation détectée</div>
-                            <div style="font-size: 0.95em; opacity: 0.8;">Le contenu analysé semble exempt de techniques de manipulation cognitive manifestes</div>
-                        </div>
-                    ` : `
-                        <div style="background: linear-gradient(135deg, #fff3cd, #ffeaa7); padding: 20px; border-radius: 12px; border: 1px solid #ffeaa7;">
-                            <h4 style="margin: 0 0 20px 0; color: #856404; font-size: 1.2em;">⚠️ Techniques de manipulation détectées</h4>
-                            <div style="display: grid; gap: 12px;">
-                                ${this.analysisResults.detectedTechniques.slice(0, 8).map(technique => `
-                                    <div style="background: white; padding: 16px; border-radius: 10px; border-left: 4px solid #e67e22; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                                        <div style="display: flex; justify-content: between; align-items: start; margin-bottom: 8px;">
-                                            <div style="flex: 1;">
-                                                <div style="font-weight: bold; color: #2c3e50; margin-bottom: 4px; font-size: 1.05em;">
-                                                    ${technique.phase === 'Detect' ? '👁️' : technique.phase === 'Informer' ? '📢' : technique.phase === 'Mémoriser' ? '🧠' : '⚡'} ${technique.index}: ${technique.nom}
-                                                </div>
-                                                ${technique.tactic ? `<div style="font-size: 0.75em; color: #7f8c8d; margin-bottom: 8px;">↳ Tactique: ${technique.tactic}</div>` : ''}
-                                                ${technique.description ? `<div style="color: #666; font-size: 0.9em; margin-bottom: 8px; line-height: 1.4;">${technique.description}</div>` : ''}
-                                            </div>
-                                            <span style="background: #27ae60; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.8em; font-weight: bold; margin-left: 15px;">
-                                                ${technique.confidence}%
-                                            </span>
-                                        </div>
-                                        
-                                        <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 8px;">
-                                            <span style="background: #e67e22; color: white; padding: 3px 8px; border-radius: 6px; font-size: 0.8em; font-weight: 500;">
-                                                ${technique.phase}
-                                            </span>
-                                            <div style="text-align: right; font-size: 0.75em; color: #7f8c8d;">
-                                                <div>Score pondéré: ${technique.weightedScore?.toFixed(1) || technique.score}</div>
-                                            </div>
-                                        </div>
-                                        
-                                        ${technique.matchedKeywords?.length > 0 ? `
-                                            <div style="margin-top: 10px;">
-                                                <div style="font-size: 0.85em; color: #666; margin-bottom: 6px; font-weight: 500;">
-                                                    🔎 Mots-clés détectés:
-                                                </div>
-                                                <div style="display: flex; flex-wrap: wrap; gap: 4px;">
-                                                    ${technique.matchedKeywords.slice(0, 4).map(keyword => 
-                                                        `<span style="background: #e9ecef; color: #495057; padding: 2px 6px; border-radius: 4px; font-size: 0.75em;">
-                                                            ${keyword.keyword} ${(keyword.count > 1) ? `(×${keyword.count})` : ''}
-                                                        </span>`
-                                                    ).join('')}
-                                                    ${technique.matchedKeywords.length > 4 ? 
-                                                        `<span style="color: #999; font-size: 0.75em; padding: 2px 4px;">+${technique.matchedKeywords.length - 4} autres...</span>` 
-                                                        : ''
-                                                    }
-                                                </div>
-                                            </div>
-                                        ` : ''}
-                                    </div>
-                                `).join('')}
-                            </div>
-                        </div>
-                    `}
-                    
+                    ${detectedHtml}
+
                     <!-- Actions -->
                     <div style="text-align: center; margin-top: 25px; padding-top: 20px; border-top: 1px solid #e9ecef;">
                         <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-                            <button onclick="document.getElementById('dima-modal').remove()" 
+                            <button type="button" id="dima-modal-close-btn"
                                     style="background: #3498db; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 500; transition: background 0.3s;">
                                 Fermer
                             </button>
-                            <button onclick="window.open('https://m82-project.org/', '_blank')" 
+                            <button type="button" id="dima-modal-learn-more-btn"
                                     style="background: #95a5a6; color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-size: 16px; font-weight: 500; transition: background 0.3s;">
                                 En savoir plus
                             </button>
@@ -879,18 +963,6 @@ ${techniques.map(t => `• ${t.nom}`).join('\n')}`;
                     </div>
 
                     <style>
-                        @keyframes fadeIn {
-                            from { opacity: 0; }
-                            to { opacity: 1; }
-                        }
-                        @keyframes slideIn {
-                            from { transform: translateY(30px); opacity: 0; }
-                            to { transform: translateY(0); opacity: 1; }
-                        }
-                        @keyframes slideInRight {
-                            from { transform: translateX(100%); opacity: 0; }
-                            to { transform: translateX(0); opacity: 1; }
-                        }
                         #dima-modal button:hover {
                             transform: translateY(-1px);
                             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
@@ -920,6 +992,19 @@ ${techniques.map(t => `• ${t.nom}`).join('\n')}`;
 
             modal.querySelector('.suspicious-details-btn')?.addEventListener('click', () => {
                 this.showSuspiciousSiteDetails();
+            });
+
+            // Boutons Fermer / En savoir plus : on remplace les anciens
+            // onclick inline (bloqués par les CSP strictes des sites hôtes).
+            modal.querySelector('#dima-modal-close-btn')?.addEventListener('click', () => {
+                modal.remove();
+            });
+            modal.querySelector('#dima-modal-learn-more-btn')?.addEventListener('click', () => {
+                window.open('https://m82-project.org/', '_blank', 'noopener,noreferrer');
+            });
+            // onerror inline du logo, également bloqué par certaines CSP.
+            modal.querySelector('#dima-modal-logo')?.addEventListener('error', (e) => {
+                e.currentTarget.style.display = 'none';
             });
 
             document.body.appendChild(modal);

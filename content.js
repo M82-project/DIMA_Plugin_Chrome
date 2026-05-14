@@ -102,24 +102,49 @@ class DIMAAnalyzer {
 
 // ===== INITIALISATION ET STYLES =====
 
-// CSS pour les animations
+// CSS pour les animations (tous les @keyframes utilisés par l'extension
+// sont définis ici une seule fois pour qu'ils soient disponibles avant
+// l'apparition du bouton, de l'alerte de site suspect ou du modal).
+// Tous les noms sont préfixés `dima*` car @keyframes partage un namespace
+// global avec la page hôte; des noms génériques (fadeIn, slideIn) auraient
+// pu écraser ou être écrasés par les animations existantes du site visité.
 const style = document.createElement("style");
 style.textContent = `
-    @keyframes dimaFadeIn {
+    @keyframes dimaFadeInScale {
         from { opacity: 0; transform: scale(0.9); }
         to { opacity: 1; transform: scale(1); }
     }
-    
+    @keyframes dimaFadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    @keyframes dimaSlideIn {
+        from { transform: translateY(30px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+    }
+    @keyframes dimaSlideInRight {
+        from { transform: translateX(100%); opacity: 0; }
+        to { transform: translateX(0); opacity: 1; }
+    }
+
     #dima-btn {
-        animation: dimaFadeIn 0.5s ease-out;
+        animation: dimaFadeInScale 0.5s ease-out;
     }
 `;
 document.head.appendChild(style);
 
-// Initialisation sécurisée avec gestion d'erreurs améliorée
-console.log("DIMA: Script chargé - Version complète avec mots-clés améliorés");
+// Initialisation sécurisée. Le log d'init est derrière le flag debug pour
+// rester silencieux sur les sites hôtes (l'extension tourne sur <all_urls>).
+const _dimaDebug = () => !!window.DIMA_DEBUG;
+if (_dimaDebug()) {
+  console.log("DIMA: Script chargé - Version complète avec mots-clés améliorés");
+}
 
-// Vérifier que toutes les dépendances sont chargées
+// Vérifier que toutes les dépendances sont chargées. Ces dépendances sont
+// censées être présentes dès l'exécution de content.js (dernier script
+// déclaré dans le manifest, document_end, ordre garanti). Le retry sert
+// uniquement de filet de sécurité pour les déploiements où l'ordre des
+// scripts viendrait à changer.
 function checkDependencies() {
   return (
     window.DIMA_TECHNIQUES &&
@@ -127,7 +152,8 @@ function checkDependencies() {
     window.CONTEXT_PATTERNS &&
     window.ContentExtractor &&
     window.TechniqueAnalyzer &&
-    window.UIManager
+    window.UIManager &&
+    typeof window.checkSuspiciousSite === "function"
   );
 }
 
@@ -140,16 +166,23 @@ function initializeDIMA(retryCount = 0) {
       console.error("DIMA: Échec du chargement des dépendances après 3 secondes.");
       return;
     }
-    console.log(`DIMA: Attente du chargement des dépendances... (${retryCount + 1}/${MAX_RETRIES})`);
+    // Log de retry derrière le flag debug. En fonctionnement normal le
+    // premier check passe et on n'imprime rien — pas de bruit sur la
+    // console de la page hôte.
+    if (_dimaDebug()) {
+      console.log(`DIMA: Attente du chargement des dépendances... (${retryCount + 1}/${MAX_RETRIES})`);
+    }
     setTimeout(() => initializeDIMA(retryCount + 1), 100);
     return;
   }
 
   try {
     const analyzer = new DIMAAnalyzer();
-    console.log(
-      `DIMA: Analyseur initialisé pour page de type: ${analyzer.pageType}`
-    );
+    if (_dimaDebug()) {
+      console.log(
+        `DIMA: Analyseur initialisé pour page de type: ${analyzer.pageType}`
+      );
+    }
   } catch (error) {
     console.error("DIMA: Erreur d'initialisation critique:", error);
   }

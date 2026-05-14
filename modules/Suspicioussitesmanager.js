@@ -19,28 +19,35 @@ class SuspiciousSitesManager {
       byTags: {},
       bySocialPlatform: {}
     };
-    
+    // Logs verbeux désactivés par défaut: l'extension s'exécute sur
+    // <all_urls> et inondait la console de chaque page hôte.
+    this.debug = !!(typeof window !== 'undefined' && window.DIMA_DEBUG);
+
     this.init();
+  }
+
+  log(...args) {
+    if (this.debug) console.log(...args);
   }
 
   /**
    * Initialise le gestionnaire en chargeant toutes les sources disponibles
    */
   init() {
-    console.log('🛡️ DIMA: Initialisation du gestionnaire de sites suspects...');
-    
+    this.log('🛡️ DIMA: Initialisation du gestionnaire de sites suspects...');
+
     // Détecter et charger les sources disponibles
     this.detectAndLoadSources();
-    
+
     // Agréger tous les sites
     this.aggregateAllSites();
-    
+
     // Calculer les statistiques
     this.calculateStats();
-    
-    console.log(`✅ DIMA: ${this.allSites.length} entrées chargées depuis ${this.sources.size} source(s)`);
-    console.log(`   - ${this.stats.totalDomains} domaines`);
-    console.log(`   - ${this.stats.totalSocialAccounts} comptes de réseaux sociaux`);
+
+    this.log(`✅ DIMA: ${this.allSites.length} entrées chargées depuis ${this.sources.size} source(s)`);
+    this.log(`   - ${this.stats.totalDomains} domaines`);
+    this.log(`   - ${this.stats.totalSocialAccounts} comptes de réseaux sociaux`);
     this.logStats();
   }
 
@@ -57,7 +64,7 @@ class SuspiciousSitesManager {
         reportUrl: 'https://www.recordedfuture.com/research/cta-ru-2025-0917',
         reportDate: '2025-09-17'
       });
-      console.log(`  ✓ Source CopyCop chargée: ${copycopDomains.length} domaines`);
+      this.log(`  ✓ Source CopyCop chargée: ${copycopDomains.length} domaines`);
     }
 
     // Source 2: RRN (VIGINUM)
@@ -69,7 +76,7 @@ class SuspiciousSitesManager {
         reportUrl: 'https://www.sgdsn.gouv.fr/files/files/20230619_NP_VIGINUM_RAPPORT-CAMPAGNE-RRN_VF_0.pdf',
         reportDate: '2023-06-19'
       });
-      console.log(`  ✓ Source RRN chargée: ${rrnDomains.length} domaines`);
+      this.log(`  ✓ Source RRN chargée: ${rrnDomains.length} domaines`);
     }
 
     // Source 3: Portal Kombat (VIGINUM)
@@ -81,7 +88,7 @@ class SuspiciousSitesManager {
         reportUrl: 'https://www.sgdsn.gouv.fr/files/files/20240212_NP_SGDSN_VIGINUM_RAPPORT-RESEAU-PORTAL-KOMBAT_VF.pdf',
         reportDate: '2024-02-01'
       });
-      console.log(`  ✓ Source Portal Kombat chargée: ${portalKombatDomains.length} domaines`);
+      this.log(`  ✓ Source Portal Kombat chargée: ${portalKombatDomains.length} domaines`);
     }
 
     // Source 4: Baybridge (IRSEM)
@@ -93,7 +100,7 @@ class SuspiciousSitesManager {
         reportUrl: 'https://www.irsem.fr/focus',
         reportDate: '2025-10-17'
       });
-      console.log(`  ✓ Source Baybridge chargée: ${baybridgeDomains.length} domaines`);
+      this.log(`  ✓ Source Baybridge chargée: ${baybridgeDomains.length} domaines`);
     }
 
     // Source 5: Storm 1516 - Domaines (VIGINUM)
@@ -105,7 +112,7 @@ class SuspiciousSitesManager {
         reportUrl: 'https://www.defense.gouv.fr/sites/default/files/desinformation/Rapport%20Storm%201516%20-%20SGDSN.pdf',
         reportDate: '2025-05-02'
       });
-      console.log(`  ✓ Source Storm 1516 (domaines) chargée: ${storm1516Domains.length} domaines`);
+      this.log(`  ✓ Source Storm 1516 (domaines) chargée: ${storm1516Domains.length} domaines`);
     }
 
     // Source 6: Storm 1516 - Comptes sociaux (VIGINUM) - FORMAT NATIF
@@ -117,7 +124,7 @@ class SuspiciousSitesManager {
         reportUrl: 'https://www.defense.gouv.fr/sites/default/files/desinformation/Rapport%20Storm%201516%20-%20SGDSN.pdf',
         reportDate: '2025-05-02'
       });
-      console.log(`  ✓ Source Storm 1516 (comptes sociaux) chargée: ${storm1516SocialAccounts.length} comptes`);
+      this.log(`  ✓ Source Storm 1516 (comptes sociaux) chargée: ${storm1516SocialAccounts.length} comptes`);
     }
 
     // Source 7: Pravda 
@@ -129,7 +136,7 @@ class SuspiciousSitesManager {
         reportUrl: 'https://www.sgdsn.gouv.fr/files/files/20240212_NP_SGDSN_VIGINUM_PORTAL-KOMBAT-NETWORK_ENG_VF.pdf',
         reportDate: '2024-12-02'
       });
-      console.log(`  ✓ Source Pravda chargée: ${pravdaDomains.length} domaines`);
+      this.log(`  ✓ Source Pravda chargée: ${pravdaDomains.length} domaines`);
     }
     
     // Source 8: Doppelganger - noms de domaines 
@@ -141,7 +148,7 @@ class SuspiciousSitesManager {
         reportUrl: 'https://en.wikipedia.org/wiki/List_of_political_disinformation_website_campaigns_in_Russia',
         reportDate: '2023-11-23'
       });
-      console.log(`  ✓ Source Doppelganger chargée: ${doppelgangerDomains.length} domaines`);
+      this.log(`  ✓ Source Doppelganger chargée: ${doppelgangerDomains.length} domaines`);
     }
 
      // Source 9: InfoRos - noms de domaines 
@@ -153,7 +160,7 @@ class SuspiciousSitesManager {
         reportUrl: 'https://openfacto.fr/2022/01/27/the-grus-galaxy-of-russian-speaking-websites/',
         reportDate: '2022-01-27'
       });
-      console.log(`  ✓ Source InfoRos chargée: ${infoRosDomains.length} domaines`);
+      this.log(`  ✓ Source InfoRos chargée: ${infoRosDomains.length} domaines`);
     }
     
      // Source 10: Laundromat - noms de domaines 
@@ -165,7 +172,7 @@ class SuspiciousSitesManager {
         reportUrl: 'https://securingdemocracy.gmfus.org/wp-content/uploads/2024/05/Laundromat-Paper.pdf',
         reportDate: '2024-05-01'
       });
-      console.log(`  ✓ Source laundromat chargée: ${laundromatDomains.length} domaines`);
+      this.log(`  ✓ Source laundromat chargée: ${laundromatDomains.length} domaines`);
     }
     
     // Avertissement si aucune source n'est chargée
@@ -247,20 +254,20 @@ class SuspiciousSitesManager {
    * Affiche les statistiques dans la console
    */
   logStats() {
-    console.log('📊 Statistiques:');
-    console.log(`   Total: ${this.stats.totalSites} entrées`);
-    console.log(`   - Domaines: ${this.stats.totalDomains}`);
-    console.log(`   - Comptes sociaux: ${this.stats.totalSocialAccounts}`);
+    this.log('📊 Statistiques:');
+    this.log(`   Total: ${this.stats.totalSites} entrées`);
+    this.log(`   - Domaines: ${this.stats.totalDomains}`);
+    this.log(`   - Comptes sociaux: ${this.stats.totalSocialAccounts}`);
     if (this.stats.totalSocialAccounts > 0) {
-      console.log('   Répartition par plateforme:');
+      this.log('   Répartition par plateforme:');
       for (const [platform, count] of Object.entries(this.stats.bySocialPlatform)) {
-        console.log(`     • ${platform}: ${count}`);
+        this.log(`     • ${platform}: ${count}`);
       }
     }
-    console.log(`   Risque élevé: ${this.stats.byRiskLevel.high || 0}`);
-    console.log(`   Risque moyen: ${this.stats.byRiskLevel.medium || 0}`);
-    console.log(`   Risque faible: ${this.stats.byRiskLevel.low || 0}`);
-    console.log(`   Sources: ${Object.keys(this.stats.bySources).length}`);
+    this.log(`   Risque élevé: ${this.stats.byRiskLevel.high || 0}`);
+    this.log(`   Risque moyen: ${this.stats.byRiskLevel.medium || 0}`);
+    this.log(`   Risque faible: ${this.stats.byRiskLevel.low || 0}`);
+    this.log(`   Sources: ${Object.keys(this.stats.bySources).length}`);
   }
 
   /**
@@ -317,7 +324,7 @@ class SuspiciousSitesManager {
         }
         
         if (isMatch) {
-          console.log(`🎯 DIMA: Match trouvé!`, {
+          this.log(`🎯 DIMA: Match trouvé!`, {
             type: matchType,
             site: site.handle || site.domain,
             url: url
@@ -399,7 +406,7 @@ class SuspiciousSitesManager {
     }
     
     if (extractedHandle) {
-      console.log(`🔍 DIMA: Comparaison - URL: "${extractedHandle}" vs DB: "${handle}"`);
+      this.log(`🔍 DIMA: Comparaison - URL: "${extractedHandle}" vs DB: "${handle}"`);
       return extractedHandle === handle;
     }
     
@@ -464,7 +471,7 @@ class SuspiciousSitesManager {
       const match = pathname.match(pattern.regex);
       if (match) {
         const handle = match[1];
-        console.log(`DIMA: Handle extrait de ${accountType}: ${handle}`);
+        this.log(`DIMA: Handle extrait de ${accountType}: ${handle}`);
         return handle;
       }
       
@@ -560,25 +567,27 @@ class SuspiciousSitesManager {
   }
 }
 
-// Initialisation automatique du gestionnaire
-let suspiciousSitesManager;
-
-// Initialiser après le chargement de toutes les bases de données
+// Initialisation automatique du gestionnaire.
+//
+// Historique: un setTimeout(100ms) entourait cette init pour "laisser les
+// autres fichiers se charger". Mais en MV3 avec `run_at: document_end`, les
+// scripts du content_scripts sont chargés et exécutés dans l'ordre déclaré
+// dans manifest.json — à ce point toutes les bases (copycopDomains, ...)
+// sont déjà définies. Le délai était donc inutile et créait une fenêtre
+// pendant laquelle `window.checkSuspiciousSite` n'existait pas, forçant
+// content.js à boucler sur ses retries pendant >=100ms à chaque page.
 if (typeof window !== 'undefined') {
-  // Dans le navigateur, initialiser après un court délai pour laisser les autres fichiers se charger
-  setTimeout(() => {
-    suspiciousSitesManager = new SuspiciousSitesManager();
-    
-    // Rendre disponible globalement
-    window.suspiciousSitesManager = suspiciousSitesManager;
-    
-    // Pour compatibilité avec l'ancien code, exposer aussi checkSuspiciousSite
-    window.checkSuspiciousSite = (url) => suspiciousSitesManager.checkSite(url);
-    
-    // Exposer aussi les statistiques et infos
-    window.getSuspiciousSitesStats = () => suspiciousSitesManager.getStats();
-    window.getSuspiciousSitesSourcesInfo = () => suspiciousSitesManager.getSourcesInfo();
-  }, 100);
+  const suspiciousSitesManager = new SuspiciousSitesManager();
+
+  // Rendre disponible globalement
+  window.suspiciousSitesManager = suspiciousSitesManager;
+
+  // Pour compatibilité avec l'ancien code, exposer aussi checkSuspiciousSite
+  window.checkSuspiciousSite = (url) => suspiciousSitesManager.checkSite(url);
+
+  // Exposer aussi les statistiques et infos
+  window.getSuspiciousSitesStats = () => suspiciousSitesManager.getStats();
+  window.getSuspiciousSitesSourcesInfo = () => suspiciousSitesManager.getSourcesInfo();
 }
 
 // Export pour Node.js si nécessaire
