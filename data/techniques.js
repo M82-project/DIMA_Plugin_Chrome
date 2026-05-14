@@ -1218,7 +1218,7 @@ const DIMA_TECHNIQUES = [
       "stock limité", "limited stock", "quantité limitée", "limited quantity",
       "places limitées", "limited seats", "dernières pièces", "last pieces",
       "derniers exemplaires", "last copies", "plus que", "only",
-      "seulement", "juste", "il ne reste que", "only left",
+      "seulement", "juste", "just", "il ne reste que", "only left",
       
       // Éditions spéciales
       "édition limitée", "limited edition", "série limitée", "limited series",
