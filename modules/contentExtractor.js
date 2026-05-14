@@ -140,7 +140,7 @@ class ContentExtractor {
 
   shouldSkipElement(element) {
     // Balises structurellement publicitaires ou non-éditoriales
-    const skipTags = ["ins", "iframe", "script", "style", "noscript"];
+    const skipTags = ["ins", "iframe", "script", "style", "noscript", "nav", "header", "footer", "aside"];
     if (skipTags.includes(element.tagName?.toLowerCase())) return true;
     const skipClasses = [
       // Navigation / structure
@@ -196,6 +196,9 @@ class ContentExtractor {
     // Vérification des ancêtres (profondeur 5)
     let parent = element.parentElement;
     for (let depth = 0; parent && depth < 5; depth++) {
+      // Vérifier si le parent est une balise structurelle à ignorer
+      if (skipTags.includes(parent.tagName?.toLowerCase())) return true;
+      
       const parentClassTokens = Array.from(parent.classList || [], (token) =>
         token.toLowerCase()
       );
