@@ -1,9 +1,8 @@
 name: CI
 
-# Déclenchement: uniquement sur les pull requests (création, push de
-# nouveaux commits, réouverture). Pas de run "post-merge" sur main —
-# la CI a déjà tourné juste avant le merge.
 on:
+  push:
+    branches: [main]
   pull_request:
 
 permissions:
