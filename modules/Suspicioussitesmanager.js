@@ -434,7 +434,8 @@ class SuspiciousSitesManager {
         },
         youtube: {
           domains: ['youtube.com'],
-          regex: /^\/(?:@|c\/|user\/)?([a-zA-Z0-9_-]+)(?:\/|$|\?)/        },
+          regex: /^\/(?:@|c\/|user\/)?([a-zA-Z0-9_-]+)(?:\/|$|\?)/
+        },
         telegram: {
           domains: ['t.me', 'telegram.me'],
           regex: /^\/([a-zA-Z0-9_]+)(?:\/|$|\?)/
