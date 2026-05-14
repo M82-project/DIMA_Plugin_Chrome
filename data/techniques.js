@@ -626,22 +626,19 @@ const DIMA_TECHNIQUES = [
         "cela va dans mon sens",
         "this supports my view",
         "ça valide mon point de vue",
-        "validates my viewpoint"
+        "validates my viewpoint",
+        "confirme",
+        "validation",
+        "tel qu'attendu",
+        "logique",
+        "confirms",
+        "as predicted",
+        "logical"
       ],
       weight: 1.4,
       type: "technique",
       tactic: "TA0022", // Généralisation et renforcement de stéréotypes
     },
-  {
-    index: "TE0222",
-    nom: "Biais de confirmation",
-    phase: "Informer",
-    description: "Le biais de confirmation, également dénommé biais de confirmation d'hypothèse, est un mécanisme cognitif qui consiste à privilégier les informations confirmant ses idées préconçues ou ses hypothèses, ",
-    mots_cles: ["confirme", "validation", "comme prévu", "tel qu'attendu", "logique", "confirms", "as expected", "as predicted", "logical"],
-    weight: 1.4,
-    type: "technique",
-    tactic: "TA0022",
-  },
   {
     index: "TE0231",
     nom: "Biais d'homogénéité",
