@@ -133,14 +133,18 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// Initialisation sécurisée avec gestion d'erreurs améliorée
-console.log("DIMA: Script chargé - Version complète avec mots-clés améliorés");
+// Initialisation sécurisée. Le log d'init est derrière le flag debug pour
+// rester silencieux sur les sites hôtes (l'extension tourne sur <all_urls>).
+const _dimaDebug = () => !!window.DIMA_DEBUG;
+if (_dimaDebug()) {
+  console.log("DIMA: Script chargé - Version complète avec mots-clés améliorés");
+}
 
-// Vérifier que toutes les dépendances sont chargées.
-// suspiciousSitesManager s'initialise via un setTimeout dans son module,
-// donc on l'attend ici aussi pour éviter une race où le bouton est créé
-// avant que la base de sites suspects soit prête (l'alerte ne s'affichait
-// alors pas sur la toute première page consultée).
+// Vérifier que toutes les dépendances sont chargées. Ces dépendances sont
+// censées être présentes dès l'exécution de content.js (dernier script
+// déclaré dans le manifest, document_end, ordre garanti). Le retry sert
+// uniquement de filet de sécurité pour les déploiements où l'ordre des
+// scripts viendrait à changer.
 function checkDependencies() {
   return (
     window.DIMA_TECHNIQUES &&
@@ -162,16 +166,23 @@ function initializeDIMA(retryCount = 0) {
       console.error("DIMA: Échec du chargement des dépendances après 3 secondes.");
       return;
     }
-    console.log(`DIMA: Attente du chargement des dépendances... (${retryCount + 1}/${MAX_RETRIES})`);
+    // Log de retry derrière le flag debug. En fonctionnement normal le
+    // premier check passe et on n'imprime rien — pas de bruit sur la
+    // console de la page hôte.
+    if (_dimaDebug()) {
+      console.log(`DIMA: Attente du chargement des dépendances... (${retryCount + 1}/${MAX_RETRIES})`);
+    }
     setTimeout(() => initializeDIMA(retryCount + 1), 100);
     return;
   }
 
   try {
     const analyzer = new DIMAAnalyzer();
-    console.log(
-      `DIMA: Analyseur initialisé pour page de type: ${analyzer.pageType}`
-    );
+    if (_dimaDebug()) {
+      console.log(
+        `DIMA: Analyseur initialisé pour page de type: ${analyzer.pageType}`
+      );
+    }
   } catch (error) {
     console.error("DIMA: Erreur d'initialisation critique:", error);
   }

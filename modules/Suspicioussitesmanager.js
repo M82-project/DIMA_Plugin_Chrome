@@ -567,25 +567,27 @@ class SuspiciousSitesManager {
   }
 }
 
-// Initialisation automatique du gestionnaire
-let suspiciousSitesManager;
-
-// Initialiser après le chargement de toutes les bases de données
+// Initialisation automatique du gestionnaire.
+//
+// Historique: un setTimeout(100ms) entourait cette init pour "laisser les
+// autres fichiers se charger". Mais en MV3 avec `run_at: document_end`, les
+// scripts du content_scripts sont chargés et exécutés dans l'ordre déclaré
+// dans manifest.json — à ce point toutes les bases (copycopDomains, ...)
+// sont déjà définies. Le délai était donc inutile et créait une fenêtre
+// pendant laquelle `window.checkSuspiciousSite` n'existait pas, forçant
+// content.js à boucler sur ses retries pendant >=100ms à chaque page.
 if (typeof window !== 'undefined') {
-  // Dans le navigateur, initialiser après un court délai pour laisser les autres fichiers se charger
-  setTimeout(() => {
-    suspiciousSitesManager = new SuspiciousSitesManager();
-    
-    // Rendre disponible globalement
-    window.suspiciousSitesManager = suspiciousSitesManager;
-    
-    // Pour compatibilité avec l'ancien code, exposer aussi checkSuspiciousSite
-    window.checkSuspiciousSite = (url) => suspiciousSitesManager.checkSite(url);
-    
-    // Exposer aussi les statistiques et infos
-    window.getSuspiciousSitesStats = () => suspiciousSitesManager.getStats();
-    window.getSuspiciousSitesSourcesInfo = () => suspiciousSitesManager.getSourcesInfo();
-  }, 100);
+  const suspiciousSitesManager = new SuspiciousSitesManager();
+
+  // Rendre disponible globalement
+  window.suspiciousSitesManager = suspiciousSitesManager;
+
+  // Pour compatibilité avec l'ancien code, exposer aussi checkSuspiciousSite
+  window.checkSuspiciousSite = (url) => suspiciousSitesManager.checkSite(url);
+
+  // Exposer aussi les statistiques et infos
+  window.getSuspiciousSitesStats = () => suspiciousSitesManager.getStats();
+  window.getSuspiciousSitesSourcesInfo = () => suspiciousSitesManager.getSourcesInfo();
 }
 
 // Export pour Node.js si nécessaire

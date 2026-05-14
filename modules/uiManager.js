@@ -50,22 +50,38 @@ class UIManager {
 
             // Créer le bouton principal (construction DOM-safe: jamais d'innerHTML
             // sur des valeurs dérivées des résultats d'analyse).
+            //
+            // Accessibilité: c'est un <div> (pas un <button>) pour conserver le
+            // style "pilule" sans avoir à neutraliser les styles natifs des
+            // boutons. On ajoute donc explicitement role=button + tabindex=0
+            // pour la navigation clavier, un libellé ARIA lisible, et un
+            // handler keydown qui réagit à Enter et Espace (sémantique
+            // équivalente à <button>).
             const button = document.createElement('div');
             button.id = 'dima-btn';
+            button.setAttribute('role', 'button');
+            button.setAttribute('tabindex', '0');
+            const score = String(this.analysisResults.globalScore ?? '');
+            const level = String(this.analysisResults.riskLevel ?? '');
+            button.setAttribute(
+                'aria-label',
+                `DIMA: score de manipulation ${score}, niveau ${level}. Activer pour ouvrir le rapport détaillé.`
+            );
 
             const inner = document.createElement('div');
             inner.style.cssText = 'display: flex; align-items: center; gap: 8px;';
 
             const brain = document.createElement('span');
             brain.textContent = '🧠';
+            brain.setAttribute('aria-hidden', 'true');
 
             const scoreSpan = document.createElement('span');
             scoreSpan.style.fontWeight = 'bold';
-            scoreSpan.textContent = String(this.analysisResults.globalScore ?? '');
+            scoreSpan.textContent = score;
 
             const levelSpan = document.createElement('span');
             levelSpan.style.cssText = 'font-size: 0.8em; opacity: 0.9;';
-            levelSpan.textContent = String(this.analysisResults.riskLevel ?? '');
+            levelSpan.textContent = level;
 
             inner.appendChild(brain);
             inner.appendChild(scoreSpan);
@@ -95,6 +111,15 @@ class UIManager {
             
             // Événements
             button.addEventListener('click', () => this.showModal());
+            // Sémantique <button> au clavier: Enter et Espace activent.
+            // preventDefault sur Espace évite que la page hôte ne scrolle
+            // quand le badge a le focus.
+            button.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ' || e.key === 'Spacebar') {
+                    e.preventDefault();
+                    this.showModal();
+                }
+            });
             button.addEventListener('mouseenter', () => {
                 button.style.transform = 'scale(1.05) translateY(-2px)';
                 button.style.boxShadow = '0 6px 20px rgba(0,0,0,0.3), 0 4px 8px rgba(0,0,0,0.2)';
@@ -102,6 +127,16 @@ class UIManager {
             button.addEventListener('mouseleave', () => {
                 button.style.transform = 'scale(1) translateY(0)';
                 button.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2), 0 2px 5px rgba(0,0,0,0.1)';
+            });
+            // Indicateur visuel de focus clavier (le user-agent ne stylise
+            // pas les <div role=button> par défaut).
+            button.addEventListener('focus', () => {
+                button.style.outline = '2px solid #ffffff';
+                button.style.outlineOffset = '2px';
+            });
+            button.addEventListener('blur', () => {
+                button.style.outline = '';
+                button.style.outlineOffset = '';
             });
 
             document.body?.appendChild(button);
