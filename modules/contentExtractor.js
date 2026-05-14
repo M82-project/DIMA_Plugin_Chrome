@@ -83,7 +83,7 @@ class ContentExtractor {
     if (content.length < 200) {
       this.log("Dernier recours - texte visible filtré");
       const paragraphs = document.body.querySelectorAll("p, h1, h2, h3, h4, h5, h6, li");
-      const fallbackTexts = new Set();
+      const fallbackTexts = new Set(extractedTexts);
       content += this.extractTextFromElements(paragraphs, fallbackTexts, 50);
 
       // body.innerText uniquement si toujours insuffisant
