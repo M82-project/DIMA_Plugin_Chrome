@@ -29,6 +29,15 @@ jobs:
       - name: Test
         run: npm test
 
+      # Sécurité supply chain : fail si une vulnérabilité de niveau `high`
+      # ou `critical` est connue dans le graphe de dépendances. La base
+      # CVE GitHub Advisory est consultée à chaque run, on n'a rien à
+      # maintenir côté repo. --omit=dev pourrait filtrer les vulnérabilités
+      # qui ne touchent que le tooling de tests, mais ici l'arbre est
+      # 100% devDependencies — on audit tout.
+      - name: Audit dependencies
+        run: npm audit --audit-level=high
+
       # Bonus: validate manifest.json is parseable and the extension can
       # be packaged (catches mistakes that would only show up at install time).
       - name: Validate manifest
