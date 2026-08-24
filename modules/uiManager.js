@@ -322,9 +322,22 @@ class UIManager {
         // Relue à chaque création du badge. Repassée par clamp() car la
         // fenêtre courante peut être plus petite que celle où la position a
         // été enregistrée.
+        // `storage.local.get` renvoie une promesse sur l'API `browser` et sur
+        // Chrome MV3, mais l'ancienne forme à callback existe encore sur
+        // certains portages: on accepte les deux.
+        const storageGet = (key) => {
+            const local = _extensionAPI?.storage?.local;
+            if (!local?.get) return Promise.resolve(undefined);
+            const maybePromise = local.get(key);
+            if (maybePromise && typeof maybePromise.then === 'function') {
+                return maybePromise;
+            }
+            return new Promise((resolve) => local.get(key, resolve));
+        };
+
         const restorePosition = async () => {
             try {
-                const stored = await _extensionAPI?.storage?.local?.get(STORAGE_KEY);
+                const stored = await storageGet(STORAGE_KEY);
                 // Le storage peut répondre après que l'utilisateur a déjà
                 // déplacé le badge: son geste gagne sur la valeur stockée.
                 if (userInteracted) return;
