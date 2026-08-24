@@ -65,7 +65,7 @@ class UIManager {
             const level = String(this.analysisResults.riskLevel ?? '');
             button.setAttribute(
                 'aria-label',
-                `DIMA: score de manipulation ${score}, niveau ${level}. Activer pour ouvrir le rapport détaillé.`
+                `DIMA: score de manipulation ${score}, niveau ${level}. Activer pour ouvrir le rapport détaillé. Flèches du clavier pour déplacer le badge.`
             );
 
             const inner = document.createElement('div');
@@ -105,12 +105,24 @@ class UIManager {
                 user-select: none !important;
                 transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
                 backdrop-filter: blur(10px) !important;
+                touch-action: none !important;
             `;
 
             button.title = this.generateTooltip();
             
             // Événements
-            button.addEventListener('click', () => this.showModal());
+            // Un déplacement se solde par un `click` que le navigateur émet
+            // quand même en fin de course: on l'avale, sinon déplacer le badge
+            // ouvrirait le rapport à chaque fois.
+            button.addEventListener('click', (e) => {
+                if (this._dragMoved) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this._dragMoved = false;
+                    return;
+                }
+                this.showModal();
+            });
             // Sémantique <button> au clavier: Enter et Espace activent.
             // preventDefault sur Espace évite que la page hôte ne scrolle
             // quand le badge a le focus.
@@ -140,6 +152,11 @@ class UIManager {
             });
 
             document.body?.appendChild(button);
+
+            // Après l'insertion: makeDraggable lit getBoundingClientRect pour
+            // restaurer la position sauvegardée, ce qui n'a de sens qu'une
+            // fois l'élément dans le document.
+            this.makeDraggable(button);
             
             // Créer l'alerte de site suspect si nécessaire
             if (this.suspiciousSiteCheck.isSuspicious) {
@@ -152,6 +169,250 @@ class UIManager {
         } catch (error) {
             console.error('DIMA: Erreur création bouton:', error);
         }
+    }
+
+    /**
+     * Contraint une position au viewport, en gardant une marge aux bords.
+     * Fonction pure (aucune lecture du DOM) pour rester testable: la mesure
+     * du badge et de la fenêtre est faite par l'appelant.
+     *
+     * Si le viewport est plus étroit que le badge, la borne haute retombe sur
+     * la marge: mieux vaut déborder à droite que se retrouver hors écran à
+     * gauche.
+     */
+    clampToViewport(left, top, size, viewport, margin = 4) {
+        const width = Number.isFinite(size?.width) ? size.width : 0;
+        const height = Number.isFinite(size?.height) ? size.height : 0;
+        const viewWidth = Number.isFinite(viewport?.width) ? viewport.width : 0;
+        const viewHeight = Number.isFinite(viewport?.height) ? viewport.height : 0;
+
+        const maxLeft = Math.max(margin, viewWidth - width - margin);
+        const maxTop = Math.max(margin, viewHeight - height - margin);
+
+        return {
+            left: Number.isFinite(left) ? Math.min(Math.max(margin, left), maxLeft) : margin,
+            top: Number.isFinite(top) ? Math.min(Math.max(margin, top), maxTop) : margin,
+        };
+    }
+
+    /**
+     * Rend le badge de score déplaçable à la souris, au doigt et au clavier.
+     *
+     * Pointer Events plutôt que mousedown/mousemove: un seul jeu de handlers
+     * couvre souris et tactile, et `setPointerCapture` garde le drag vivant
+     * quand le curseur sort du badge ou de la fenêtre.
+     *
+     * Le badge reste un `role=button` qui ouvre le rapport au clic. Les deux
+     * gestes cohabitent grâce au seuil MOVE_THRESHOLD: en dessous, l'appui
+     * reste un clic; au-dessus, il devient un déplacement et le `click` final
+     * est neutralisé via `this._dragMoved` (voir createButton).
+     */
+    makeDraggable(el) {
+        const MOVE_THRESHOLD = 4;  // px avant qu'un appui compte comme un déplacement
+        const EDGE_MARGIN = 4;     // marge minimale conservée contre les bords
+        const STORAGE_KEY = 'dima:badgePosition';
+        const SAVE_DEBOUNCE_MS = 200;
+
+        let activePointerId = null;
+        let startX = 0, startY = 0;
+        let originLeft = 0, originTop = 0;
+        let savedTransition = null;
+        let savedTransitionPriority = '';
+        let saveTimer = null;
+        // Position courante en mémoire: source de vérité pour les déplacements
+        // successifs. Relire getBoundingClientRect à chaque pas forcerait un
+        // reflow, et rendrait chaque pas dépendant du rendu précédent.
+        let currentLeft = null;
+        let currentTop = null;
+
+        this._dragMoved = false;
+
+        // Garde le badge entièrement visible, quelle que soit la taille du
+        // viewport (utile aussi après un redimensionnement de la fenêtre).
+        const clamp = (left, top) => {
+            const rect = el.getBoundingClientRect();
+            return this.clampToViewport(
+                left,
+                top,
+                { width: rect.width, height: rect.height },
+                { width: window.innerWidth, height: window.innerHeight },
+                EDGE_MARGIN
+            );
+        };
+
+        const applyPosition = (left, top) => {
+            currentLeft = left;
+            currentTop = top;
+            el.style.setProperty('left', `${left}px`, 'important');
+            el.style.setProperty('top', `${top}px`, 'important');
+        };
+
+        // Le badge est initialement posé en `right`. On bascule en `left`
+        // absolu à partir de sa position rendue, pour qu'il ne saute pas au
+        // premier pixel de déplacement.
+        const pinToLeftTop = () => {
+            const rect = el.getBoundingClientRect();
+            el.style.setProperty('right', 'auto', 'important');
+            el.style.setProperty('bottom', 'auto', 'important');
+            applyPosition(rect.left, rect.top);
+            return rect;
+        };
+
+        // Persistance de la position d'une page à l'autre. Volontairement
+        // globale et non par domaine: on range le badge une fois, il reste
+        // à cet endroit partout. Le debounce évite une écriture par touche
+        // lors d'un déplacement au clavier.
+        const savePosition = () => {
+            const position = { left: currentLeft, top: currentTop };
+            if (!Number.isFinite(position.left) || !Number.isFinite(position.top)) return;
+            clearTimeout(saveTimer);
+            saveTimer = setTimeout(() => {
+                try {
+                    _extensionAPI?.storage?.local?.set({ [STORAGE_KEY]: position });
+                } catch (error) {
+                    this.log('Position du badge non sauvegardée', error);
+                }
+            }, SAVE_DEBOUNCE_MS);
+        };
+
+        // Relue à chaque création du badge. Repassée par clamp() car la
+        // fenêtre courante peut être plus petite que celle où la position a
+        // été enregistrée.
+        const restorePosition = async () => {
+            try {
+                const stored = await _extensionAPI?.storage?.local?.get(STORAGE_KEY);
+                const saved = stored?.[STORAGE_KEY];
+                if (!saved || !Number.isFinite(saved.left) || !Number.isFinite(saved.top)) {
+                    return;
+                }
+                el.style.setProperty('right', 'auto', 'important');
+                el.style.setProperty('bottom', 'auto', 'important');
+                const { left, top } = clamp(saved.left, saved.top);
+                applyPosition(left, top);
+            } catch (error) {
+                this.log('Position du badge non restaurée', error);
+            }
+        };
+
+        const onPointerDown = (e) => {
+            if (e.button > 0) return;  // seulement le bouton principal / le doigt
+
+            activePointerId = e.pointerId;
+            try {
+                el.setPointerCapture(activePointerId);
+            } catch {
+                // Navigateur sans capture: le drag marche quand même tant que
+                // le curseur reste sur le badge.
+            }
+
+            const rect = pinToLeftTop();
+            originLeft = rect.left;
+            originTop = rect.top;
+            startX = e.clientX;
+            startY = e.clientY;
+            this._dragMoved = false;
+
+            // `transition: all 0.3s` s'appliquerait à left/top: sans cette
+            // coupure, le badge traîne derrière le curseur pendant tout le
+            // déplacement.
+            savedTransition = el.style.getPropertyValue('transition');
+            savedTransitionPriority = el.style.getPropertyPriority('transition');
+            el.style.setProperty('transition', 'none', 'important');
+            el.style.setProperty('cursor', 'grabbing', 'important');
+        };
+
+        const onPointerMove = (e) => {
+            if (activePointerId === null || e.pointerId !== activePointerId) return;
+
+            const dx = e.clientX - startX;
+            const dy = e.clientY - startY;
+
+            if (!this._dragMoved && Math.hypot(dx, dy) < MOVE_THRESHOLD) return;
+
+            this._dragMoved = true;
+            e.preventDefault();
+
+            // Les handlers de survol posent un scale()/translateY(): laissé en
+            // place, le badge flotte à côté du curseur pendant le déplacement.
+            el.style.setProperty('transform', 'none', 'important');
+
+            const { left, top } = clamp(originLeft + dx, originTop + dy);
+            applyPosition(left, top);
+        };
+
+        const endDrag = (e) => {
+            if (activePointerId === null) return;
+            if (e && e.pointerId !== activePointerId) return;
+
+            try {
+                if (el.hasPointerCapture?.(activePointerId)) {
+                    el.releasePointerCapture(activePointerId);
+                }
+            } catch {
+                // Rien à relacher.
+            }
+            activePointerId = null;
+
+            if (savedTransition !== null) {
+                el.style.setProperty('transition', savedTransition, savedTransitionPriority);
+                savedTransition = null;
+            }
+            el.style.setProperty('cursor', 'pointer', 'important');
+            el.style.removeProperty('transform');
+            if (this._dragMoved) {
+                savePosition();
+            }
+            // `_dragMoved` n'est PAS remis à false ici: le `click` qui suit
+            // doit encore pouvoir le lire pour s'annuler. Il est réarmé au
+            // prochain pointerdown.
+        };
+
+        // Déplacement au clavier: le badge est déjà focusable (tabindex=0),
+        // les flèches le déplacent, Shift accélère. preventDefault évite que
+        // la page hôte ne scrolle sous le badge focalisé.
+        const onKeyDown = (e) => {
+            const step = e.shiftKey ? 20 : 2;
+            const deltas = {
+                ArrowLeft: [-step, 0],
+                ArrowRight: [step, 0],
+                ArrowUp: [0, -step],
+                ArrowDown: [0, step],
+            };
+            const delta = deltas[e.key];
+            if (!delta) return;
+
+            e.preventDefault();
+            if (currentLeft === null) {
+                pinToLeftTop();
+            }
+            const { left, top } = clamp(currentLeft + delta[0], currentTop + delta[1]);
+            applyPosition(left, top);
+            savePosition();
+        };
+
+        // Une fenêtre rétrécie ne doit pas laisser le badge hors champ.
+        const onResize = () => {
+            if (currentLeft === null) return;
+            const { left, top } = clamp(currentLeft, currentTop);
+            applyPosition(left, top);
+        };
+
+        el.addEventListener('pointerdown', onPointerDown);
+        el.addEventListener('pointermove', onPointerMove);
+        el.addEventListener('pointerup', endDrag);
+        el.addEventListener('pointercancel', endDrag);
+        el.addEventListener('keydown', onKeyDown);
+        window.addEventListener('resize', onResize);
+
+        // Le badge est reconstruit à chaque analyse: sans ça, les listeners
+        // `resize` des instances précédentes s'accumulent sur window.
+        this._teardownDrag?.();
+        this._teardownDrag = () => {
+            clearTimeout(saveTimer);
+            window.removeEventListener('resize', onResize);
+        };
+
+        restorePosition();
     }
 
     createSuspiciousSiteAlert() {
