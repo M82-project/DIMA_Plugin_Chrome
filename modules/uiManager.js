@@ -347,6 +347,8 @@ class UIManager {
             // déplacement.
             savedTransition = el.style.getPropertyValue('transition');
             savedTransitionPriority = el.style.getPropertyPriority('transition');
+            savedTransform = el.style.getPropertyValue('transform');
+            savedTransformPriority = el.style.getPropertyPriority('transform');
             el.style.setProperty('transition', 'none', 'important');
             el.style.setProperty('cursor', 'grabbing', 'important');
         };
@@ -388,7 +390,14 @@ class UIManager {
                 savedTransition = null;
             }
             el.style.setProperty('cursor', 'pointer', 'important');
-            el.style.removeProperty('transform');
+            // Restaure l'état de survol d'avant le drag plutôt que de le
+            // supprimer: la souris est encore sur le badge après un clic.
+            if (savedTransform) {
+                el.style.setProperty('transform', savedTransform, savedTransformPriority);
+            } else {
+                el.style.removeProperty('transform');
+            }
+            savedTransform = null;
             if (this._dragMoved) {
                 savePosition();
             }
