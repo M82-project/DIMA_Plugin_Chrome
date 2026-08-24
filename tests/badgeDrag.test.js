@@ -333,4 +333,69 @@ describe('badge drag: position persistence', () => {
 
     expect(document.getElementById('dima-btn')).not.toBeNull();
   });
+
+  it('lets a user move win over a slow storage restore', async () => {
+    let resolveGet;
+    chrome.storage.local.get = () => new Promise((r) => { resolveGet = r; });
+
+    const instance = new window.UIManager({ debugMode: false });
+    const badge = buildBadge(instance);
+
+    // The user drags before storage has answered.
+    badge.dispatchEvent(pointer('pointerdown', { clientX: 100, clientY: 100 }));
+    badge.dispatchEvent(pointer('pointermove', { clientX: 300, clientY: 400 }));
+    badge.dispatchEvent(pointer('pointerup', { clientX: 300, clientY: 400 }));
+    const afterDrag = badge.style.getPropertyValue('left');
+
+    resolveGet({ 'dima:badgePosition': { left: 777, top: 555 } });
+    await Promise.resolve();
+    await Promise.resolve();
+    await Promise.resolve();
+
+    expect(badge.style.getPropertyValue('left')).toBe(afterDrag);
+    expect(badge.style.getPropertyValue('left')).not.toBe('777px');
+  });
+
+  it('survives a rejected storage write', async () => {
+    vi.useFakeTimers();
+    const set = vi.fn(() => Promise.reject(new Error('quota exceeded')));
+    chrome.storage.local.set = set;
+
+    const instance = new window.UIManager({ debugMode: false });
+    const badge = buildBadge(instance);
+
+    badge.dispatchEvent(pointer('pointerdown', { clientX: 100, clientY: 100 }));
+    badge.dispatchEvent(pointer('pointermove', { clientX: 260, clientY: 300 }));
+    badge.dispatchEvent(pointer('pointerup', { clientX: 260, clientY: 300 }));
+
+    expect(() => vi.advanceTimersByTime(250)).not.toThrow();
+    expect(set).toHaveBeenCalledTimes(1);
+
+    vi.useRealTimers();
+    await Promise.resolve();
+  });
+});
+
+describe('badge drag: focus affordance', () => {
+  beforeEach(() => {
+    document.body.innerHTML = '';
+    chrome.storage.local.get = async () => ({});
+    chrome.storage.local.set = async () => undefined;
+  });
+
+  it('paints a two-tone focus ring that survives a light host page', () => {
+    const instance = new window.UIManager({ debugMode: false });
+    const badge = buildBadge(instance);
+
+    badge.dispatchEvent(new window.FocusEvent('focus'));
+    const ring = badge.style.getPropertyValue('box-shadow');
+
+    // Inner white liseré + outer dark one: a lone white outline vanishes on
+    // white host pages.
+    expect(ring).toContain('#ffffff');
+    expect(ring).toContain('#1a1a1a');
+
+    badge.dispatchEvent(new window.FocusEvent('blur'));
+    expect(badge.style.getPropertyValue('box-shadow')).not.toContain('#1a1a1a');
+  });
 });

@@ -140,15 +140,24 @@ class UIManager {
                 button.style.transform = 'scale(1) translateY(0)';
                 button.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2), 0 2px 5px rgba(0,0,0,0.1)';
             });
-            // Indicateur visuel de focus clavier (le user-agent ne stylise
-            // pas les <div role=button> par défaut).
+            // Indicateur de focus clavier à double anneau: un liseré blanc
+            // dedans, un foncé dehors. Un simple contour blanc disparaît sur
+            // les pages hôtes claires, où le badge flotte sans fond garanti.
             button.addEventListener('focus', () => {
-                button.style.outline = '2px solid #ffffff';
-                button.style.outlineOffset = '2px';
+                button.style.setProperty('outline', 'none', 'important');
+                button.style.setProperty(
+                    'box-shadow',
+                    '0 0 0 2px #ffffff, 0 0 0 5px #1a1a1a, 0 4px 15px rgba(0,0,0,0.2)',
+                    'important'
+                );
             });
             button.addEventListener('blur', () => {
-                button.style.outline = '';
-                button.style.outlineOffset = '';
+                button.style.removeProperty('outline');
+                button.style.setProperty(
+                    'box-shadow',
+                    '0 4px 15px rgba(0,0,0,0.2), 0 2px 5px rgba(0,0,0,0.1)',
+                    'important'
+                );
             });
 
             document.body?.appendChild(button);
