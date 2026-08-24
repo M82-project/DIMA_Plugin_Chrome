@@ -441,7 +441,18 @@ class UIManager {
 
         // Une fenêtre rétrécie ne doit pas laisser le badge hors champ.
         const onResize = () => {
-            if (currentLeft === null) return;
+            if (currentLeft === null) {
+                // Badge encore ancré à droite: il suit le bord tout seul. On
+                // n'intervient que s'il sort réellement du viewport (fenêtre
+                // devenue plus étroite que lui).
+                const rect = measureUntransformed();
+                const fits = rect.left >= EDGE_MARGIN
+                    && rect.top >= EDGE_MARGIN
+                    && rect.right <= window.innerWidth
+                    && rect.bottom <= window.innerHeight;
+                if (fits) return;
+                pinToLeftTop();
+            }
             const { left, top } = clamp(currentLeft, currentTop);
             applyPosition(left, top);
         };
