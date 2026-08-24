@@ -399,3 +399,38 @@ describe('badge drag: focus affordance', () => {
     expect(badge.style.getPropertyValue('box-shadow')).not.toContain('#1a1a1a');
   });
 });
+
+describe('badge keyboard activation', () => {
+  beforeEach(() => {
+    document.body.innerHTML = '';
+    chrome.storage.local.get = async () => ({});
+    chrome.storage.local.set = async () => undefined;
+  });
+
+  it.each([['Enter'], [' '], ['Spacebar']])('opens the report on %s', (key) => {
+    const instance = new window.UIManager({ debugMode: false });
+    instance.showModal = vi.fn();
+    const badge = buildBadge(instance);
+
+    const event = new window.KeyboardEvent('keydown', { key, bubbles: true, cancelable: true });
+    badge.dispatchEvent(event);
+
+    expect(instance.showModal).toHaveBeenCalledTimes(1);
+    // preventDefault keeps Space from scrolling the host page.
+    expect(event.defaultPrevented).toBe(true);
+  });
+
+  it('ignores a second pointer while a gesture is active', () => {
+    const instance = new window.UIManager({ debugMode: false });
+    const badge = buildBadge(instance);
+    const before = badge.style.getPropertyValue('transition');
+
+    badge.dispatchEvent(pointer('pointerdown', { pointerId: 1, clientX: 100, clientY: 100 }));
+    // A second finger must not hijack the gesture: it would overwrite the
+    // saved transition with the already-applied "none".
+    badge.dispatchEvent(pointer('pointerdown', { pointerId: 2, clientX: 150, clientY: 150 }));
+    badge.dispatchEvent(pointer('pointerup', { pointerId: 1, clientX: 100, clientY: 100 }));
+
+    expect(badge.style.getPropertyValue('transition')).toBe(before);
+  });
+});

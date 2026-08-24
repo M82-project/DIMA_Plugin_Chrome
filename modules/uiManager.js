@@ -343,6 +343,10 @@ class UIManager {
 
         const onPointerDown = (e) => {
             if (e.button > 0) return;  // seulement le bouton principal / le doigt
+            // Un second doigt ne doit pas détourner le geste en cours: sans ce
+            // garde, activePointerId et savedTransition sont écrasés et le
+            // badge peut rester figé sans transition.
+            if (activePointerId !== null) return;
 
             userInteracted = true;
             activePointerId = e.pointerId;
