@@ -1116,8 +1116,17 @@ ${techniques.map(t => `• ${t.nom}`).join('\n')}`;
             
             document.getElementById('dima-modal')?.remove();
 
+            const previouslyFocused = document.activeElement;
+
             const modal = document.createElement('div');
             modal.id = 'dima-modal';
+            // Même sémantique que showSuspiciousSiteDetails: sans role=dialog ni
+            // déplacement du focus, l'activation clavier du badge ouvre un
+            // panneau que ni le clavier ni un lecteur d'écran n'atteignent.
+            modal.setAttribute('role', 'dialog');
+            modal.setAttribute('aria-modal', 'true');
+            modal.setAttribute('aria-labelledby', 'dima-modal-title');
+            modal.tabIndex = -1;
             
             modal.style.cssText = `
                 position: fixed !important;
@@ -1250,7 +1259,7 @@ ${techniques.map(t => `• ${t.nom}`).join('\n')}`;
                                  id="dima-modal-logo"
                                  style="width: 24px; height: 24px;"
                                  alt="M82 Project">
-                            <h2 style="color: #2c3e50; margin: 0; font-size: 1.8em;">Analyse DIMA</h2>
+                            <h2 id="dima-modal-title" style="color: #2c3e50; margin: 0; font-size: 1.8em;">Analyse DIMA</h2>
                         </div>
                         <p style="color: #7f8c8d; margin: 0; font-size: 0.95em;">
                             Détection de techniques de manipulation cognitive par
@@ -1335,7 +1344,7 @@ ${techniques.map(t => `• ${t.nom}`).join('\n')}`;
             }
 
             modal.addEventListener('click', (e) => {
-                if (e.target === modal) modal.remove();
+                if (e.target === modal) closeModal();
             });
 
             modal.querySelector('.suspicious-details-btn')?.addEventListener('click', () => {
@@ -1345,7 +1354,7 @@ ${techniques.map(t => `• ${t.nom}`).join('\n')}`;
             // Boutons Fermer / En savoir plus : on remplace les anciens
             // onclick inline (bloqués par les CSP strictes des sites hôtes).
             modal.querySelector('#dima-modal-close-btn')?.addEventListener('click', () => {
-                modal.remove();
+                closeModal();
             });
             modal.querySelector('#dima-modal-learn-more-btn')?.addEventListener('click', () => {
                 window.open('https://m82-project.org/', '_blank', 'noopener,noreferrer');
@@ -1355,7 +1364,59 @@ ${techniques.map(t => `• ${t.nom}`).join('\n')}`;
                 e.currentTarget.style.display = 'none';
             });
 
+            let cleanedUp = false;
+            const cleanup = () => {
+                if (cleanedUp) return;
+                cleanedUp = true;
+                document.removeEventListener('keydown', onModalKeyDown, true);
+                if (previouslyFocused && typeof previouslyFocused.focus === 'function') {
+                    previouslyFocused.focus();
+                }
+            };
+            const closeModal = () => {
+                if (modal.isConnected) modal.remove();
+                cleanup();
+            };
+
+            // Focus trap: capture phase + stopPropagation pour que les
+            // raccourcis de la page hôte ne se déclenchent pas derrière.
+            const onModalKeyDown = (e) => {
+                if (e.key === 'Escape') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    closeModal();
+                    return;
+                }
+                if (e.key !== 'Tab') return;
+                const focusables = modal.querySelectorAll(
+                    'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
+                );
+                if (focusables.length === 0) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    modal.focus();
+                    return;
+                }
+                const first = focusables[0];
+                const last = focusables[focusables.length - 1];
+                const active = document.activeElement;
+                if (e.shiftKey && (active === first || !modal.contains(active))) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    last.focus();
+                } else if (!e.shiftKey && (active === last || !modal.contains(active))) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    first.focus();
+                } else {
+                    e.stopPropagation();
+                }
+            };
+
+            document.addEventListener('keydown', onModalKeyDown, true);
+
             document.body.appendChild(modal);
+            modal.querySelector('#dima-modal-close-btn')?.focus();
             this.log('Modal affiché');
 
         } catch (error) {
