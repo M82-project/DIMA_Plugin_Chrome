@@ -13,13 +13,13 @@
     "ci": "npm run lint && npm test"
   },
   "devDependencies": {
-    "@vitest/coverage-v8": "^2.1.8",
+    "@vitest/coverage-v8": "^4.1.11",
     "eslint": "^9.17.0",
     "globals": "^15.14.0",
     "happy-dom": "^20.9.0",
-    "vitest": "^2.1.8"
+    "vitest": "^4.1.11"
   },
   "engines": {
-    "node": ">=20"
+    "node": "^20.19.0 || >=22.12.0"
   }
 }

@@ -13,12 +13,14 @@ jobs:
     name: Lint & Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'npm'
 
       - run: npm ci
@@ -29,16 +31,21 @@ jobs:
       - name: Test
         run: npm test
 
-      # Sécurité supply chain : fail si une vulnérabilité de niveau `high`
-      # ou `critical` est connue dans le graphe de dépendances. La base
-      # CVE GitHub Advisory est consultée à chaque run, on n'a rien à
-      # maintenir côté repo. --omit=dev pourrait filtrer les vulnérabilités
-      # qui ne touchent que le tooling de tests, mais ici l'arbre est
-      # 100% devDependencies — on audit tout.
       - name: Audit dependencies
         run: npm audit --audit-level=high
 
-      # Bonus: validate manifest.json is parseable and the extension can
-      # be packaged (catches mistakes that would only show up at install time).
       - name: Validate manifest
         run: node -e "JSON.parse(require('fs').readFileSync('manifest.json', 'utf8')); console.log('manifest.json OK')"
+
+  workflows:
+    name: Audit workflows (zizmor)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          persist-credentials: false
+
+      - name: Run zizmor
+        uses: zizmorcore/zizmor-action@3dc1ecc9bcb9e94e9b2c709687979e1298497054 # v0.6.2
+        with:
+          advanced-security: false
