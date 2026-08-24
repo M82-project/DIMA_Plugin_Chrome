@@ -316,6 +316,9 @@ class UIManager {
         const restorePosition = async () => {
             try {
                 const stored = await _extensionAPI?.storage?.local?.get(STORAGE_KEY);
+                // Le storage peut répondre après que l'utilisateur a déjà
+                // déplacé le badge: son geste gagne sur la valeur stockée.
+                if (userInteracted) return;
                 const saved = stored?.[STORAGE_KEY];
                 if (!saved || !Number.isFinite(saved.left) || !Number.isFinite(saved.top)) {
                     return;
