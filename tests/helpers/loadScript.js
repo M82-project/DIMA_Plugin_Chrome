@@ -12,6 +12,8 @@ const repoRoot = resolve(import.meta.dirname, '..', '..');
 // Important: `chrome` n'existe pas en environnement de test, mais uiManager.js
 // y fait référence au top-level (`_extensionAPI = browser ?? chrome`). On le
 // stubbe avant chaque appel à loadScript pour éviter ReferenceError.
+// Le stub inclut `storage.local` car le badge y persiste sa position; les
+// tests remplacent get/set par des vi.fn() quand ils veulent observer.
 export function loadScript(relativePath) {
   ensureExtensionApiStub();
   const src = readFileSync(resolve(repoRoot, relativePath), 'utf8');
@@ -23,6 +25,12 @@ function ensureExtensionApiStub() {
     globalThis.chrome = {
       runtime: {
         getURL: (path) => `chrome-extension://test/${path}`,
+      },
+      storage: {
+        local: {
+          get: async () => ({}),
+          set: async () => undefined,
+        },
       },
     };
   }
