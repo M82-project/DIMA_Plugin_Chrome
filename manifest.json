@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "DIMA - Digital Influence Manipulation Analyzer",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "description": "Plugin d'analyse de manipulation cognitive selon la matrice DIMA par M82 Project, détecte et analyse les sites suspects identifiés dans des rapports de désinformation",
   "permissions": [
     "activeTab",
