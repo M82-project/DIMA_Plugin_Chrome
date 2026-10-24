@@ -174,6 +174,18 @@ class SuspiciousSitesManager {
       });
       this.log(`  ✓ Source laundromat chargée: ${laundromatDomains.length} domaines`);
     }
+
+    // Source 11: African Initiative - noms de domaines
+    if (typeof africanInitiativeDomains !== 'undefined' && Array.isArray(africanInitiativeDomains)) {
+      this.registerSource('AfricanInitiative', africanInitiativeDomains, {
+        name: 'Opération - African Initiative',
+        description: 'Agence de presse russe African Initiative et son écosystème (AI-Freak, RusAfro) : diplomatie publique servant de couverture à des opérations d\'influence en Afrique et au Royaume-Uni, avec contenus générés par LLM.',
+        organization: 'VIGINUM, FCDO, EEAS, Graphika, All Eyes on Wagner',
+        reportUrl: 'https://www.sgdsn.gouv.fr/files/files/Publications/20250612_TLP-CLEAR_VIGINUM_FCDO_EEAS_Technical_Report_African_Initiative_EN.pdf',
+        reportDate: '2025-06-12'
+      });
+      this.log(`  ✓ Source African Initiative chargée: ${africanInitiativeDomains.length} domaines`);
+    }
     
     // Avertissement si aucune source n'est chargée. Gardé derrière le flag
     // debug : c'est une condition "configuration" (l'ordre de chargement
