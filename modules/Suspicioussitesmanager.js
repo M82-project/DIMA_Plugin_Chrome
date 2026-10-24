@@ -186,6 +186,66 @@ class SuspiciousSitesManager {
       });
       this.log(`  ✓ Source African Initiative chargée: ${africanInitiativeDomains.length} domaines`);
     }
+
+    // Source 12: Africa Politology / SVR et successeurs de Wagner - noms de domaines
+    if (typeof africaPolitologyDomains !== 'undefined' && Array.isArray(africaPolitologyDomains)) {
+      this.registerSource('AfricaPolitology', africaPolitologyDomains, {
+        name: 'Opération - Africa Politology / SVR et successeurs de Wagner',
+        description: 'Dispositif d\'influence russe en Afrique repris par le SVR après Wagner (Africa Politology, Bureau Legint, GR Group).',
+        organization: 'All Eyes on Wagner',
+        reportUrl: 'https://alleyesonwagner.org/2025/08/10/after-wagner-russias-spin-doctors-take-over-in-africa/',
+        reportDate: '2025-08-10'
+      });
+      this.log(`  ✓ Source Africa Politology chargée: ${africaPolitologyDomains.length} domaines`);
+    }
+
+    // Source 13: Borderless Group - noms de domaines
+    if (typeof borderlessGroupDomains !== 'undefined' && Array.isArray(borderlessGroupDomains)) {
+      this.registerSource('BorderlessGroup', borderlessGroupDomains, {
+        name: 'Opération - Borderless Group',
+        description: 'Réseau Borderless Group : fermes de contenus pro-RPC actives notamment sur Threads.',
+        organization: 'Doublethink Lab',
+        reportUrl: 'https://medium.com/doublethinklab/assessing-the-borderless-groups-activity-on-threads-69257a44ca82',
+        reportDate: '2026-04-28'
+      });
+      this.log(`  ✓ Source Borderless Group chargée: ${borderlessGroupDomains.length} domaines`);
+    }
+
+    // Source 14: Réseau affilié à China News Service - noms de domaines
+    if (typeof chinaNewsServiceNetworkDomains !== 'undefined' && Array.isArray(chinaNewsServiceNetworkDomains)) {
+      this.registerSource('ChinaNewsServiceNetwork', chinaNewsServiceNetworkDomains, {
+        name: 'Opération - Réseau affilié à China News Service',
+        description: 'Réseau de sites d\'information de la diaspora chinoise affilié à l\'agence d\'État China News Service.',
+        organization: 'Nisos',
+        reportUrl: 'https://6068438.fs1.hubspotusercontent-na1.net/hubfs/6068438/chinese-info-ops-account-takeover.pdf',
+        reportDate: '2023-07-11'
+      });
+      this.log(`  ✓ Source China News Service chargée: ${chinaNewsServiceNetworkDomains.length} domaines`);
+    }
+
+    // Source 15: CopyCop / Storm-1516 (compléments) - noms de domaines
+    if (typeof copycopStorm1516Domains !== 'undefined' && Array.isArray(copycopStorm1516Domains)) {
+      this.registerSource('CopycopStorm1516', copycopStorm1516Domains, {
+        name: 'Opération - CopyCop / Storm-1516 (compléments)',
+        description: 'Domaines CopyCop / Storm-1516 (John Mark Dougan) absents des bases Storm1516 et CopyCop : faux médias locaux générés par IA.',
+        organization: 'VIGINUM, Recorded Future, Microsoft MTAC, ISD, EK Strategic Communications Center',
+        reportUrl: 'https://www.recordedfuture.com/blog/copycop-targets-ai-investment',
+        reportDate: '2026-08-18'
+      });
+      this.log(`  ✓ Source CopyCop / Storm-1516 (compléments) chargée: ${copycopStorm1516Domains.length} domaines`);
+    }
+
+    // Source 16: Autres opérations (privées / régionales) - noms de domaines
+    if (typeof diversAutresDomains !== 'undefined' && Array.isArray(diversAutresDomains)) {
+      this.registerSource('DiversAutres', diversAutresDomains, {
+        name: 'Autres opérations (privées / régionales)',
+        description: 'Opérations d\'influence privées ou régionales diverses (Mind Force, Zero Zeno/STOIC, Operation Red Card, Serbie, Azerbaïdjan, Venezuela, Brésil, etc.).',
+        organization: 'Stanford Internet Observatory, Graphika, Meta, OpenAI, Anthropic, Nisos, DFRLab, Citizen Lab, Mandiant, Recorded Future',
+        reportUrl: 'https://github.com/tripkrant/IO-Campaign-Collections',
+        reportDate: '2026-10-03'
+      });
+      this.log(`  ✓ Source Autres opérations chargée: ${diversAutresDomains.length} domaines`);
+    }
     
     // Avertissement si aucune source n'est chargée. Gardé derrière le flag
     // debug : c'est une condition "configuration" (l'ordre de chargement
