@@ -26,6 +26,7 @@
         "data/databases/Doppelganger.js",
         "data/databases/InfoRos.js",
         "data/databases/laundromat.js",
+        "data/databases/AfricanInitiative.js",
         "data/keywords.js",
         "modules/contentExtractor.js",
         "modules/Suspicioussitesmanager.js",
